@@ -143,7 +143,7 @@ export const conversationsData: Conversation[] = [
       {
         id: 3,
         sender: 'user',
-        content: 'We're offering a 20% commission on all sales through your custom link.',
+        content: 'We\'re offering a 20% commission on all sales through your custom link.',
         time: '2023-09-04T11:20:00',
         status: 'read',
       },
