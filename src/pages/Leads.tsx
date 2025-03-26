@@ -1,6 +1,8 @@
 
 import React, { useState } from 'react';
-import { UserPlus, Filter, MoreHorizontal, Edit, Send, Trash2, Download, Tag } from 'lucide-react';
+import { UserPlus, Filter, MoreHorizontal, Edit, Send, Trash2, Download, Tag, Instagram, Twitter, Linkedin } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 // Sample leads data
 const leadsData = [
@@ -72,6 +74,25 @@ const formatDate = (dateString: string | null) => {
   }).format(date);
 };
 
+// Get platform icon component
+const getPlatformIcon = (platform: string) => {
+  switch (platform) {
+    case 'Instagram':
+      return <Instagram size={16} className="text-pink-500" />;
+    case 'Twitter':
+      return <Twitter size={16} className="text-blue-400" />;
+    case 'LinkedIn':
+      return <Linkedin size={16} className="text-blue-700" />;
+    default:
+      return null;
+  }
+};
+
+// Get avatar fallback (first letter of full name)
+const getAvatarFallback = (name: string) => {
+  return name.charAt(0);
+};
+
 const Leads = () => {
   const [selectedLeads, setSelectedLeads] = useState<number[]>([]);
   
@@ -135,46 +156,59 @@ const Leads = () => {
       {/* Leads Table */}
       <div className="bg-card border border-border rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-secondary/50 border-b border-border">
-              <tr>
-                <th className="px-6 py-3 text-left">
+          <Table>
+            <TableHeader className="bg-secondary/50 border-b border-border">
+              <TableRow>
+                <TableHead className="px-6 py-3 text-left">
                   <input 
                     type="checkbox" 
                     className="rounded border-border"
                     checked={selectedLeads.length === leadsData.length}
                     onChange={toggleAllLeads}
                   />
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-medium">Platform</th>
-                <th className="px-6 py-3 text-left text-sm font-medium">Username</th>
-                <th className="px-6 py-3 text-left text-sm font-medium">Full Name</th>
-                <th className="px-6 py-3 text-left text-sm font-medium">Last Contacted</th>
-                <th className="px-6 py-3 text-left text-sm font-medium">Status</th>
-                <th className="px-6 py-3 text-right text-sm font-medium">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
+                </TableHead>
+                <TableHead className="px-6 py-3 text-left text-sm font-medium">User</TableHead>
+                <TableHead className="px-6 py-3 text-left text-sm font-medium">Platform</TableHead>
+                <TableHead className="px-6 py-3 text-left text-sm font-medium">Username</TableHead>
+                <TableHead className="px-6 py-3 text-left text-sm font-medium">Last Contacted</TableHead>
+                <TableHead className="px-6 py-3 text-left text-sm font-medium">Status</TableHead>
+                <TableHead className="px-6 py-3 text-right text-sm font-medium">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="divide-y divide-border">
               {leadsData.map((lead) => (
-                <tr key={lead.id} className="hover:bg-secondary/30 transition-colors">
-                  <td className="px-6 py-4">
+                <TableRow key={lead.id} className="hover:bg-secondary/30 transition-colors">
+                  <TableCell className="px-6 py-4">
                     <input 
                       type="checkbox" 
                       className="rounded border-border"
                       checked={selectedLeads.includes(lead.id)}
                       onChange={() => toggleLeadSelection(lead.id)}
                     />
-                  </td>
-                  <td className="px-6 py-4 text-sm">{lead.platform}</td>
-                  <td className="px-6 py-4 text-sm">{lead.username}</td>
-                  <td className="px-6 py-4 text-sm">{lead.fullName}</td>
-                  <td className="px-6 py-4 text-sm">{formatDate(lead.lastContacted)}</td>
-                  <td className="px-6 py-4">
-                    <span className={`px-2 py-1 rounded-full text-xs ${getStatusClass(lead.status)}`}>
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <Avatar>
+                        <AvatarImage src={`https://i.pravatar.cc/150?u=${lead.id}`} alt={lead.fullName} />
+                        <AvatarFallback>{getAvatarFallback(lead.fullName)}</AvatarFallback>
+                      </Avatar>
+                      <span className="font-medium">{lead.fullName}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    <div className="flex items-center gap-2">
+                      {getPlatformIcon(lead.platform)}
+                      <span>{lead.platform}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-sm">{lead.username}</TableCell>
+                  <TableCell className="px-6 py-4 text-sm">{formatDate(lead.lastContacted)}</TableCell>
+                  <TableCell className="px-6 py-4">
+                    <span className={`px-2.5 py-0.5 rounded-full text-xs ${getStatusClass(lead.status)}`}>
                       {lead.status}
                     </span>
-                  </td>
-                  <td className="px-6 py-4 text-right">
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end space-x-2">
                       <button className="p-1 rounded hover:bg-secondary transition-colors">
                         <Edit size={16} className="text-muted-foreground hover:text-foreground" />
@@ -186,11 +220,11 @@ const Leads = () => {
                         <Trash2 size={16} className="text-muted-foreground hover:text-foreground" />
                       </button>
                     </div>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
         
         {/* Pagination */}
