@@ -1,22 +1,58 @@
 
-import React from 'react';
-import { Bell, Search, HelpCircle, UserCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Bell, HelpCircle, UserCircle, Moon, Sun } from 'lucide-react';
+import { Switch } from "@/components/ui/switch";
 
 const Navbar = () => {
+  const [isDarkTheme, setIsDarkTheme] = useState(true);
+  
+  // Toggle between dark and light theme
+  const toggleTheme = () => {
+    const newTheme = !isDarkTheme;
+    setIsDarkTheme(newTheme);
+    
+    // Update the DOM
+    if (newTheme) {
+      document.documentElement.classList.remove('light-theme');
+    } else {
+      document.documentElement.classList.add('light-theme');
+    }
+  };
+  
+  // Initialize theme on component mount
+  useEffect(() => {
+    // Check if user has a saved preference
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    // Set initial theme based on saved preference or system preference
+    if (savedTheme === 'light') {
+      setIsDarkTheme(false);
+      document.documentElement.classList.add('light-theme');
+    } else if (savedTheme === 'dark' || prefersDark) {
+      setIsDarkTheme(true);
+      document.documentElement.classList.remove('light-theme');
+    }
+  }, []);
+  
+  // Save theme preference when it changes
+  useEffect(() => {
+    localStorage.setItem('theme', isDarkTheme ? 'dark' : 'light');
+  }, [isDarkTheme]);
+
   return (
-    <header className="fixed top-0 left-[65px] right-0 h-16 bg-card border-b border-border z-30 px-6 flex items-center justify-between">
-      <div className="relative w-full max-w-md">
-        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-          <Search className="h-4 w-4 text-muted-foreground" />
-        </div>
-        <input
-          type="search"
-          className="block w-full pl-10 pr-3 py-2 bg-secondary/50 border border-border rounded-md text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-yellow/50 transition-all duration-200"
-          placeholder="Search leads, campaigns, or messages..."
-        />
-      </div>
-      
+    <header className="fixed top-0 left-[65px] right-0 h-16 bg-card border-b border-border z-30 px-6 flex items-center justify-end">
       <div className="flex items-center space-x-5">
+        <div className="flex items-center space-x-2 mr-2">
+          <Moon size={18} className={`text-muted-foreground ${isDarkTheme ? 'text-yellow' : ''}`} />
+          <Switch 
+            checked={isDarkTheme}
+            onCheckedChange={toggleTheme}
+            className="data-[state=checked]:bg-yellow"
+          />
+          <Sun size={18} className={`text-muted-foreground ${!isDarkTheme ? 'text-yellow' : ''}`} />
+        </div>
+        
         <button className="relative p-2 rounded-md hover:bg-secondary/50 transition-all duration-200">
           <Bell size={20} className="text-muted-foreground hover:text-foreground" />
           <span className="absolute top-1 right-1 w-2 h-2 bg-yellow rounded-full"></span>
