@@ -7,7 +7,8 @@ import {
   Send, 
   MessageSquare, 
   Settings, 
-  LogOut 
+  LogOut,
+  Globe
 } from 'lucide-react';
 
 const sidebarItems = [
@@ -31,6 +32,11 @@ const sidebarItems = [
     path: '/automation', 
     icon: MessageSquare, 
     label: 'DM Automation'
+  },
+  { 
+    path: '/proxy-profiles', 
+    icon: Globe, 
+    label: 'Proxy Profiles'
   },
   { 
     path: '/settings', 

@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import Leads from "./pages/Leads";
 import Campaigns from "./pages/Campaigns";
 import Automation from "./pages/Automation";
+import ProxyProfiles from "./pages/ProxyProfiles";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/leads" element={<Layout><Leads /></Layout>} />
           <Route path="/campaigns" element={<Layout><Campaigns /></Layout>} />
           <Route path="/automation" element={<Layout><Automation /></Layout>} />
+          <Route path="/proxy-profiles" element={<Layout><ProxyProfiles /></Layout>} />
           <Route path="/settings" element={<Layout><Settings /></Layout>} />
           <Route path="*" element={<Layout><NotFound /></Layout>} />
         </Routes>
