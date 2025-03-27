@@ -209,8 +209,8 @@ const ProxyProfiles = () => {
 
         {/* Performance and Details Panel (34%) */}
         <div className="w-1/3 space-y-6">
-          <ProxyDetails proxy={selectedProxy} />
           <PerformanceMetrics proxy={selectedProxy} />
+          <ProxyDetails proxy={selectedProxy} />
         </div>
       </div>
     </div>
