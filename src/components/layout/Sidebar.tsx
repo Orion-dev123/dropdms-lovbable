@@ -7,7 +7,6 @@ import {
   Send, 
   MessageSquare, 
   Settings, 
-  LogOut,
   Globe
 } from 'lucide-react';
 
@@ -73,13 +72,6 @@ const Sidebar = () => {
           </NavLink>
         ))}
       </nav>
-      
-      <div className="mt-auto">
-        <button className="hover-tooltip relative w-10 h-10 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-all duration-200">
-          <LogOut size={20} />
-          <span className="tooltip">Logout</span>
-        </button>
-      </div>
     </aside>
   );
 };
