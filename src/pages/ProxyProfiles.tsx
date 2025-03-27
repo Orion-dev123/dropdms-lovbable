@@ -167,7 +167,7 @@ const ProxyProfiles = () => {
                 className={`
                   p-4 rounded-lg border border-border bg-card hover:bg-card/80 cursor-pointer
                   transition-all duration-200 relative overflow-hidden
-                  ${selectedProxy.id === proxy.id ? 'ring-1 ring-yellow' : ''}
+                  ${selectedProxy.id === proxy.id ? 'ring-1 ring-gray-500 bg-gray-100/10 dark:bg-gray-800/30' : ''}
                 `}
                 onClick={() => setSelectedProxy(proxy)}
               >
