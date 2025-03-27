@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Search, Plus, ChevronRight, Chrome, Firefox, Edge, Shield, Server } from 'lucide-react';
+import { Search, Plus, ChevronRight, Chrome, Monitor, Shield, Server } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import ProxyDetails from '@/components/proxy/ProxyDetails';
@@ -30,8 +30,8 @@ const osPlatforms = {
 const getBrowserIcon = (browser) => {
   switch(browser) {
     case 'Chrome': return <Chrome size={16} />;
-    case 'Firefox': return <Firefox size={16} />;
-    case 'Edge': return <Edge size={16} />;
+    case 'Firefox': return <Monitor size={16} />; // Using Monitor as a replacement for Firefox
+    case 'Edge': return <Monitor size={16} />; // Using Monitor as a replacement for Edge
     default: return <Chrome size={16} />;
   }
 };
