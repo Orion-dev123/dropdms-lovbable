@@ -30,7 +30,7 @@ const sidebarItems = [
   { 
     path: '/automation', 
     icon: Inbox, 
-    label: 'DM Automation'
+    label: 'Inbox'
   },
   { 
     path: '/proxy-profiles', 
