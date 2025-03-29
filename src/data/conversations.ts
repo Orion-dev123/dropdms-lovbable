@@ -284,14 +284,14 @@ export const conversationsData: Conversation[] = [
       {
         id: 1,
         sender: 'user',
-        content: 'Hello Alex, I noticed you\'re the marketing director at TechCorp. I\'d love to show you our new marketing automation platform.',
+        content: 'Hello Alex, I noticed you are the marketing director at TechCorp. I would love to show you our new marketing automation platform.',
         time: '2023-09-07T09:00:00',
         status: 'read',
       },
       {
         id: 2,
         sender: 'contact',
-        content: 'Hi there. We\'re actually in the market for a new solution. What makes yours different?',
+        content: 'Hi there. We are actually in the market for a new solution. What makes yours different?',
         time: '2023-09-07T09:30:00',
         status: 'read',
       },
