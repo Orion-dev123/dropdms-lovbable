@@ -5,7 +5,7 @@ import {
   LayoutDashboard, 
   Users, 
   Send, 
-  MessageSquare, 
+  Inbox, 
   Settings, 
   Globe
 } from 'lucide-react';
@@ -29,7 +29,7 @@ const sidebarItems = [
   },
   { 
     path: '/automation', 
-    icon: MessageSquare, 
+    icon: Inbox, 
     label: 'DM Automation'
   },
   { 

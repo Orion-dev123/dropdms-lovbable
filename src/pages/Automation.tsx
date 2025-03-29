@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { MessageSquare, Send, Clock, Filter, Search, Plus, Inbox } from 'lucide-react';
+import { Inbox, Send, Clock, Filter, Search, Plus } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { conversationsData as initialConversations, scheduledMessagesData as initialScheduledMessages } from '../data/conversations';
 import { formatScheduledDate, getInitials, Conversation } from '@/utils/messageUtils';
@@ -52,39 +51,39 @@ const Automation = () => {
   };
   
   return (
-    <div className="p-0 h-[calc(100vh-16px)] mt-16 ml-[65px] animate-fade-in">
+    <div className="h-full flex flex-col">
       {/* Page Header */}
-      <div className="bg-card p-6 border-b border-border">
+      <div className="bg-card p-4 border-b border-border sticky top-0 z-10">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">
             <Inbox size={28} className="text-yellow" />
             <h1 className="text-2xl font-bold">Inbox</h1>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <button 
               onClick={() => setShowScheduled(!showScheduled)}
               className={`px-3 py-2 rounded-md flex items-center gap-2 ${
                 showScheduled ? 'bg-yellow/10 text-yellow' : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
               }`}
             >
-              <Clock size={18} />
+              <Clock size={16} />
               <span>{showScheduled ? 'View Conversations' : 'View Scheduled'}</span>
             </button>
             <button 
               className="px-3 py-2 rounded-md bg-yellow text-primary-foreground flex items-center gap-2 hover-scale"
               onClick={() => setIsScheduleDialogOpen(true)}
             >
-              <Plus size={18} />
+              <Plus size={16} />
               <span>New Message</span>
             </button>
           </div>
         </div>
       </div>
 
-      <div className="flex h-[calc(100vh-140px)]">
+      <div className="flex h-full">
         {/* Left Sidebar - Conversations */}
-        <div className="w-80 border-r border-border flex flex-col h-full">
-          <div className="p-4 border-b border-border flex items-center justify-between">
+        <div className="w-80 border-r border-border flex flex-col h-full bg-card overflow-hidden">
+          <div className="p-3 border-b border-border flex items-center justify-between">
             <h2 className="font-medium">
               {showScheduled ? 'Scheduled Messages' : 'Conversations'}
             </h2>
@@ -97,7 +96,7 @@ const Automation = () => {
           
           {/* Search input */}
           {!showScheduled && (
-            <div className="p-4 border-b border-border">
+            <div className="p-3 border-b border-border">
               <div className="relative">
                 <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                 <input
@@ -111,9 +110,10 @@ const Automation = () => {
             </div>
           )}
           
-          {!showScheduled ? (
-            <div className="flex-1 overflow-y-auto">
-              {filteredConversations.length > 0 ? (
+          {/* Conversations or Scheduled Messages List */}
+          <div className="flex-1 overflow-y-auto">
+            {!showScheduled ? (
+              filteredConversations.length > 0 ? (
                 filteredConversations.map((conversation) => (
                   <div 
                     key={conversation.id}
@@ -157,165 +157,167 @@ const Automation = () => {
                 ))
               ) : (
                 <div className="p-8 text-center text-muted-foreground">
-                  <MessageSquare size={36} className="mx-auto mb-2 opacity-50" />
+                  <Inbox size={36} className="mx-auto mb-2 opacity-50" />
                   <p>No conversations found</p>
                 </div>
-              )}
-            </div>
-          ) : (
-            <div className="flex-1 overflow-y-auto p-4">
-              {scheduledMessages.length > 0 ? (
-                scheduledMessages.map((message) => (
-                  <div key={message.id} className="mb-4 bg-card rounded-lg p-3 border border-border">
-                    <div className="flex justify-between items-start mb-2">
-                      <span className="text-xs bg-secondary/50 px-1.5 py-0.5 rounded text-muted-foreground">{message.platform}</span>
-                      <div className="flex items-center gap-2">
-                        <button 
-                          className="text-xs text-muted-foreground hover:text-foreground"
-                          onClick={() => toast({ title: "Not implemented", description: "Edit functionality is not implemented yet." })}
-                        >
-                          Edit
-                        </button>
-                        <button 
-                          className="text-xs text-muted-foreground hover:text-red-500"
-                          onClick={() => handleDeleteScheduledMessage(message.id)}
-                        >
-                          Delete
-                        </button>
+              )
+            ) : (
+              <div className="p-3">
+                {scheduledMessages.length > 0 ? (
+                  scheduledMessages.map((message) => (
+                    <div key={message.id} className="mb-4 bg-card rounded-lg p-3 border border-border">
+                      <div className="flex justify-between items-start mb-2">
+                        <span className="text-xs bg-secondary/50 px-1.5 py-0.5 rounded text-muted-foreground">{message.platform}</span>
+                        <div className="flex items-center gap-2">
+                          <button 
+                            className="text-xs text-muted-foreground hover:text-foreground"
+                            onClick={() => toast({ title: "Not implemented", description: "Edit functionality is not implemented yet." })}
+                          >
+                            Edit
+                          </button>
+                          <button 
+                            className="text-xs text-muted-foreground hover:text-red-500"
+                            onClick={() => handleDeleteScheduledMessage(message.id)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                      
+                      <p className="text-sm mb-2 line-clamp-2">{message.content}</p>
+                      
+                      <div className="flex justify-between items-center text-xs text-muted-foreground">
+                        <span>{message.recipients} recipients</span>
+                        <div className="flex items-center">
+                          <Clock size={12} className="mr-1" />
+                          <span>{formatScheduledDate(message.scheduledFor)}</span>
+                        </div>
                       </div>
                     </div>
-                    
-                    <p className="text-sm mb-2 line-clamp-2">{message.content}</p>
-                    
-                    <div className="flex justify-between items-center text-xs text-muted-foreground">
-                      <span>{message.recipients} recipients</span>
-                      <div className="flex items-center">
-                        <Clock size={12} className="mr-1" />
-                        <span>{formatScheduledDate(message.scheduledFor)}</span>
-                      </div>
-                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-6 text-muted-foreground">
+                    <Clock size={36} className="mx-auto mb-2 opacity-50" />
+                    <p>No scheduled messages</p>
                   </div>
-                ))
-              ) : (
-                <div className="text-center py-6 text-muted-foreground">
-                  <Clock size={36} className="mx-auto mb-2 opacity-50" />
-                  <p>No scheduled messages</p>
-                </div>
-              )}
-              
-              <button 
-                className="w-full py-2 mt-2 border border-border rounded-md text-sm flex items-center justify-center gap-2 text-muted-foreground hover:text-foreground hover:bg-secondary/30 transition-colors"
-                onClick={() => setIsScheduleDialogOpen(true)}
-              >
-                <Plus size={16} />
-                Schedule New Message
-              </button>
-            </div>
-          )}
+                )}
+                
+                <button 
+                  className="w-full py-2 mt-2 border border-border rounded-md text-sm flex items-center justify-center gap-2 text-muted-foreground hover:text-foreground hover:bg-secondary/30 transition-colors"
+                  onClick={() => setIsScheduleDialogOpen(true)}
+                >
+                  <Plus size={16} />
+                  Schedule New Message
+                </button>
+              </div>
+            )}
+          </div>
         </div>
         
-        {/* Main Content - Conversation */}
-        {selectedConversation && currentConversation && !showScheduled ? (
-          <div className="flex-1 flex flex-col">
-            {/* Conversation Header */}
-            <div className="p-4 border-b border-border flex items-center justify-between">
-              <div className="flex items-center">
-                <div className="mr-3">
-                  {currentConversation.avatar ? (
-                    <img 
-                      src={currentConversation.avatar} 
-                      alt={currentConversation.name} 
-                      className="w-10 h-10 rounded-full"
-                    />
-                  ) : (
-                    <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground">
-                      {getInitials(currentConversation.name)}
+        {/* Main Content - Conversation or Scheduled Messages View */}
+        <div className="flex-1 flex flex-col h-full overflow-hidden">
+          {selectedConversation && currentConversation && !showScheduled ? (
+            <>
+              {/* Conversation Header */}
+              <div className="p-3 border-b border-border flex items-center justify-between bg-card">
+                <div className="flex items-center">
+                  <div className="mr-3">
+                    {currentConversation.avatar ? (
+                      <img 
+                        src={currentConversation.avatar} 
+                        alt={currentConversation.name} 
+                        className="w-10 h-10 rounded-full"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground">
+                        {getInitials(currentConversation.name)}
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <h3 className="font-medium">{currentConversation.name}</h3>
+                    <div className="flex items-center">
+                      <span className="text-xs text-muted-foreground">@{currentConversation.username}</span>
+                      <span className="mx-1 text-muted-foreground">•</span>
+                      <span className="text-xs bg-secondary/50 px-1.5 py-0.5 rounded text-muted-foreground">{currentConversation.platform}</span>
                     </div>
-                  )}
+                  </div>
                 </div>
                 
-                <div>
-                  <h3 className="font-medium">{currentConversation.name}</h3>
-                  <div className="flex items-center">
-                    <span className="text-xs text-muted-foreground">@{currentConversation.username}</span>
-                    <span className="mx-1 text-muted-foreground">•</span>
-                    <span className="text-xs bg-secondary/50 px-1.5 py-0.5 rounded text-muted-foreground">{currentConversation.platform}</span>
-                  </div>
+                <div className="flex items-center gap-2">
+                  <button 
+                    className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                    onClick={() => toast({ title: "Profile", description: "View profile feature is not implemented yet." })}
+                  >
+                    View Profile
+                  </button>
                 </div>
               </div>
               
-              <div className="flex items-center gap-2">
+              {/* Messages */}
+              <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-background" id="messages-container">
+                {currentConversation.messages.map((message) => (
+                  <div 
+                    key={message.id}
+                    className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                  >
+                    <div 
+                      className={`max-w-[70%] rounded-lg p-3 ${
+                        message.sender === 'user' 
+                          ? 'bg-yellow/10 text-foreground' 
+                          : 'bg-secondary text-foreground'
+                      }`}
+                    >
+                      <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                      <div className="flex items-center justify-end mt-1">
+                        <span className="text-xs text-muted-foreground">
+                          {formatScheduledDate(message.time)}
+                        </span>
+                        {message.sender === 'user' && (
+                          <span className="ml-1 text-xs text-muted-foreground">
+                            {message.status === 'delivered' ? '✓' : message.status === 'read' ? '✓✓' : ''}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              {/* Message Input */}
+              <MessageComposer 
+                selectedConversation={selectedConversation}
+                conversations={conversations}
+                setConversations={setConversations}
+                onSchedule={() => setIsScheduleDialogOpen(true)}
+              />
+            </>
+          ) : !showScheduled ? (
+            <div className="flex-1 flex items-center justify-center bg-background">
+              <div className="text-center">
+                <Inbox size={48} className="mx-auto mb-4 text-muted-foreground" />
+                <h3 className="text-lg font-medium mb-2">No conversation selected</h3>
+                <p className="text-muted-foreground">Select a conversation to start messaging</p>
+              </div>
+            </div>
+          ) : (
+            <div className="flex-1 flex items-center justify-center bg-background">
+              <div className="text-center max-w-md p-6">
+                <Clock size={48} className="mx-auto mb-4 text-muted-foreground" />
+                <h3 className="text-xl font-medium mb-3">Scheduled Messages View</h3>
+                <p className="text-muted-foreground mb-6">You are currently viewing your scheduled messages. Select a message to see details or create a new scheduled message.</p>
                 <button 
-                  className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary/50"
-                  onClick={() => toast({ title: "Profile", description: "View profile feature is not implemented yet." })}
+                  className="px-4 py-2 bg-yellow text-primary-foreground rounded-md inline-flex items-center gap-2 hover-scale"
+                  onClick={() => setIsScheduleDialogOpen(true)}
                 >
-                  View Profile
+                  <Plus size={18} />
+                  Schedule New Message
                 </button>
               </div>
             </div>
-            
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4" id="messages-container">
-              {currentConversation.messages.map((message) => (
-                <div 
-                  key={message.id}
-                  className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div 
-                    className={`max-w-[70%] rounded-lg p-3 ${
-                      message.sender === 'user' 
-                        ? 'bg-yellow/10 text-foreground' 
-                        : 'bg-secondary text-foreground'
-                    }`}
-                  >
-                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                    <div className="flex items-center justify-end mt-1">
-                      <span className="text-xs text-muted-foreground">
-                        {formatScheduledDate(message.time)}
-                      </span>
-                      {message.sender === 'user' && (
-                        <span className="ml-1 text-xs text-muted-foreground">
-                          {message.status === 'delivered' ? '✓' : message.status === 'read' ? '✓✓' : ''}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            {/* Message Input */}
-            <MessageComposer 
-              selectedConversation={selectedConversation}
-              conversations={conversations}
-              setConversations={setConversations}
-              onSchedule={() => setIsScheduleDialogOpen(true)}
-            />
-          </div>
-        ) : !showScheduled ? (
-          <div className="flex-1 flex items-center justify-center">
-            <div className="text-center">
-              <MessageSquare size={48} className="mx-auto mb-4 text-muted-foreground" />
-              <h3 className="text-lg font-medium mb-2">No conversation selected</h3>
-              <p className="text-muted-foreground">Select a conversation to start messaging</p>
-            </div>
-          </div>
-        ) : (
-          <div className="flex-1 flex items-center justify-center">
-            <div className="text-center max-w-md p-6">
-              <Clock size={48} className="mx-auto mb-4 text-muted-foreground" />
-              <h3 className="text-xl font-medium mb-3">Scheduled Messages View</h3>
-              <p className="text-muted-foreground mb-6">You are currently viewing your scheduled messages. Select a message to see details or create a new scheduled message.</p>
-              <button 
-                className="px-4 py-2 bg-yellow text-primary-foreground rounded-md inline-flex items-center gap-2 hover-scale"
-                onClick={() => setIsScheduleDialogOpen(true)}
-              >
-                <Plus size={18} />
-                Schedule New Message
-              </button>
-            </div>
-          </div>
-        )}
+          )}
+        </div>
 
         {/* Schedule Message Dialog */}
         <ScheduleMessageDialog 
