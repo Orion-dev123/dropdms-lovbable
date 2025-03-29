@@ -51,7 +51,7 @@ const Automation = () => {
   };
   
   return (
-    <div className="flex flex-col h-full pb-0 max-h-[calc(100vh-64px)]">
+    <div className="flex flex-col h-full">
       {/* Page Header */}
       <div className="bg-card p-4 border-b border-border sticky top-0 z-10">
         <div className="flex justify-between items-center">
@@ -80,9 +80,9 @@ const Automation = () => {
         </div>
       </div>
 
-      <div className="flex flex-1 min-h-0">
+      <div className="flex flex-1 overflow-hidden">
         {/* Left Sidebar - Conversations */}
-        <div className="w-80 border-r border-border flex flex-col h-full bg-card overflow-hidden">
+        <div className="w-80 border-r border-border flex flex-col overflow-hidden bg-card">
           <div className="p-3 border-b border-border flex items-center justify-between">
             <h2 className="font-medium">
               {showScheduled ? 'Scheduled Messages' : 'Conversations'}
@@ -215,7 +215,7 @@ const Automation = () => {
         </div>
         
         {/* Main Content - Conversation or Scheduled Messages View */}
-        <div className="flex-1 flex flex-col h-full overflow-hidden">
+        <div className="flex-1 flex flex-col overflow-hidden">
           {selectedConversation && currentConversation && !showScheduled ? (
             <>
               {/* Conversation Header */}
@@ -285,8 +285,8 @@ const Automation = () => {
                 ))}
               </div>
               
-              {/* Message Input - ensure it's always visible and not covered */}
-              <div className="z-20 relative bg-card">
+              {/* Message Input - positioned at the bottom with proper z-index */}
+              <div className="sticky bottom-0 left-0 right-0 w-full bg-card border-t border-border">
                 <MessageComposer 
                   selectedConversation={selectedConversation}
                   conversations={conversations}

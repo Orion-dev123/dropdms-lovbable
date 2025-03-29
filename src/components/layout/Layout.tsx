@@ -16,7 +16,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     <div className="min-h-screen bg-background text-foreground">
       <Sidebar />
       <Navbar />
-      <main className={`ml-[65px] pt-16 ${isInboxPage ? 'h-[calc(100vh-64px)] overflow-hidden' : 'min-h-[calc(100vh-64px)] overflow-auto'}`}>
+      <main className={`ml-[65px] pt-16 ${isInboxPage ? 'h-[calc(100vh-64px)]' : 'min-h-[calc(100vh-64px)]'}`}>
         {children}
       </main>
     </div>
