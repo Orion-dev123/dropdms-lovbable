@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Search, Plus, ChevronRight, Chrome, Monitor, Shield, Server } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -30,8 +29,8 @@ const osPlatforms = {
 const getBrowserIcon = (browser) => {
   switch(browser) {
     case 'Chrome': return <Chrome size={16} />;
-    case 'Firefox': return <Monitor size={16} />; // Using Monitor as a replacement for Firefox
-    case 'Edge': return <Monitor size={16} />; // Using Monitor as a replacement for Edge
+    case 'Firefox': return <Monitor size={16} />;
+    case 'Edge': return <Monitor size={16} />;
     default: return <Chrome size={16} />;
   }
 };
@@ -127,8 +126,7 @@ const ProxyProfiles = () => {
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Proxy Profiles</h1>
+      <div className="flex justify-end">
         <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
           <DialogTrigger asChild>
             <Button className="bg-yellow text-yellow-foreground hover:bg-yellow/90">
@@ -148,7 +146,6 @@ const ProxyProfiles = () => {
       </div>
 
       <div className="flex gap-6">
-        {/* Proxy List Panel (66%) */}
         <div className="w-2/3 space-y-4">
           <div className="relative">
             <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -200,14 +197,12 @@ const ProxyProfiles = () => {
                     <ChevronRight size={18} className="text-muted-foreground" />
                   </div>
                 </div>
-                {/* Activity indicator on the left side */}
                 <div className={`absolute h-full w-1 left-0 top-0 ${proxy.active ? 'bg-green-500' : 'bg-red-500'}`} />
               </div>
             ))}
           </div>
         </div>
 
-        {/* Performance and Details Panel (34%) */}
         <div className="w-1/3 space-y-6">
           <PerformanceMetrics proxy={selectedProxy} />
           <ProxyDetails proxy={selectedProxy} />

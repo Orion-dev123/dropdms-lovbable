@@ -8,11 +8,6 @@ import { Send, UserPlus, Clock, BarChart } from 'lucide-react';
 const Dashboard = () => {
   return (
     <div className="p-6 animate-fade-in">
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold">Dashboard</h1>
-        <p className="text-muted-foreground">Welcome back! Here's what's happening today.</p>
-      </div>
-      
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
         <StatCard 

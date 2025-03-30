@@ -2,9 +2,27 @@
 import React, { useState, useEffect } from 'react';
 import { Bell, HelpCircle, UserCircle, Moon, Sun } from 'lucide-react';
 import { Switch } from "@/components/ui/switch";
+import { Location } from 'react-router-dom';
 
-const Navbar = () => {
+// Map of routes to their display names
+const routeTitles: Record<string, string> = {
+  '/': 'Dashboard',
+  '/leads': 'Leads',
+  '/campaigns': 'Campaigns',
+  '/automation': 'Inbox',
+  '/proxy-profiles': 'Proxy Profiles',
+  '/settings': 'Settings'
+};
+
+interface NavbarProps {
+  location: Location;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ location }) => {
   const [isDarkTheme, setIsDarkTheme] = useState(true);
+  
+  // Get the current page title from the location pathname
+  const currentPageTitle = routeTitles[location.pathname] || 'Dashboard';
   
   // Toggle between dark and light theme
   const toggleTheme = () => {
@@ -41,7 +59,9 @@ const Navbar = () => {
   }, [isDarkTheme]);
 
   return (
-    <header className="fixed top-0 left-[65px] right-0 h-16 bg-card border-b border-border z-30 px-6 flex items-center justify-end">
+    <header className="fixed top-0 left-[65px] right-0 h-16 bg-card border-b border-border z-30 px-6 flex items-center justify-between">
+      <h1 className="text-xl font-semibold">{currentPageTitle}</h1>
+      
       <div className="flex items-center space-x-5">
         <div className="flex items-center space-x-2 mr-2">
           <Moon size={18} className={`text-muted-foreground ${isDarkTheme ? 'text-yellow' : ''}`} />
