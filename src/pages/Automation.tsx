@@ -62,30 +62,24 @@ const Automation = () => {
   
   return (
     <div className="flex flex-col h-full">
-      {/* Page Header */}
-      <div className="bg-card p-4 border-b border-border sticky top-0 z-10">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <Inbox size={28} className="text-yellow" />
-          </div>
-          <div className="flex items-center gap-3">
-            <button 
-              onClick={() => setShowScheduled(!showScheduled)}
-              className={`px-3 py-2 rounded-md flex items-center gap-2 ${
-                showScheduled ? 'bg-yellow/10 text-yellow' : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
-              }`}
-            >
-              <Clock size={16} />
-              <span>{showScheduled ? 'View Conversations' : 'View Scheduled'}</span>
-            </button>
-            <button 
-              className="px-3 py-2 rounded-md bg-yellow text-primary-foreground flex items-center gap-2 hover-scale"
-              onClick={() => setIsScheduleDialogOpen(true)}
-            >
-              <Plus size={16} />
-              <span>New Message</span>
-            </button>
-          </div>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end">
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={() => setShowScheduled(!showScheduled)}
+            className={`px-3 py-2 rounded-md flex items-center gap-2 ${
+              showScheduled ? 'bg-yellow/10 text-yellow' : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+            }`}
+          >
+            <Clock size={16} />
+            <span>{showScheduled ? 'View Conversations' : 'View Scheduled'}</span>
+          </button>
+          <button 
+            className="px-3 py-2 rounded-md bg-yellow text-primary-foreground flex items-center gap-2 hover-scale"
+            onClick={() => setIsScheduleDialogOpen(true)}
+          >
+            <Plus size={16} />
+            <span>New Message</span>
+          </button>
         </div>
       </div>
 
