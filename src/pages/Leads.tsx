@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { UserPlus, Filter, MoreHorizontal, Edit, Send, Trash2, Download, Tag, Instagram, Twitter, Linkedin } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -116,12 +115,7 @@ const Leads = () => {
   
   return (
     <div className="p-6 animate-fade-in">
-      <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold">Leads Management</h1>
-          <p className="text-muted-foreground">Manage all your contact leads in one place</p>
-        </div>
-        
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end mb-6">
         <div className="mt-4 sm:mt-0 flex flex-wrap gap-3">
           <button className="px-4 py-2 bg-yellow text-primary-foreground rounded-md flex items-center gap-2 hover-scale">
             <UserPlus size={16} />

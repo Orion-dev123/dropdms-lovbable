@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Inbox, Send, Clock, Filter, Search, Plus } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
@@ -68,7 +67,6 @@ const Automation = () => {
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">
             <Inbox size={28} className="text-yellow" />
-            <h1 className="text-2xl font-bold">Inbox</h1>
           </div>
           <div className="flex items-center gap-3">
             <button 
