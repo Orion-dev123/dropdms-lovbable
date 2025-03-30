@@ -13,10 +13,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const isInboxPage = location.pathname === '/automation';
   
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Sidebar />
       <Navbar />
-      <main className={`ml-[65px] pt-16 ${isInboxPage ? 'h-[calc(100vh-64px)]' : 'min-h-[calc(100vh-64px)]'}`}>
+      <main className={`ml-[65px] pt-16 ${isInboxPage ? 'h-[calc(100vh-64px)]' : 'min-h-[calc(100vh-64px)]'} overflow-hidden`}>
         {children}
       </main>
     </div>

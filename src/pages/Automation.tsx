@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect, useRef } from 'react';
 import { Inbox, Send, Clock, Filter, Search, Plus } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { conversationsData as initialConversations, scheduledMessagesData as initialScheduledMessages } from '../data/conversations';
 import { formatScheduledDate, getInitials, Conversation } from '@/utils/messageUtils';
 import MessageComposer from '@/components/automation/MessageComposer';
@@ -16,9 +18,18 @@ const Automation = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isScheduleDialogOpen, setIsScheduleDialogOpen] = useState(false);
   
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  
   // Get the selected conversation data
   const currentConversation = conversations.find(conv => conv.id === selectedConversation);
   
+  // Scroll to bottom of messages when conversation changes or new message is added
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [currentConversation?.messages]);
+
   // Filter conversations based on search query
   const filteredConversations = conversations.filter(conv => 
     conv.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -80,9 +91,9 @@ const Automation = () => {
         </div>
       </div>
 
-      <div className="flex flex-1 overflow-visible">
+      <div className="flex flex-1 h-[calc(100vh-120px)]">
         {/* Left Sidebar - Conversations */}
-        <div className="w-80 border-r border-border flex flex-col overflow-visible bg-card">
+        <div className="w-80 border-r border-border flex flex-col bg-card">
           <div className="p-3 border-b border-border flex items-center justify-between">
             <h2 className="font-medium">
               {showScheduled ? 'Scheduled Messages' : 'Conversations'}
@@ -110,8 +121,8 @@ const Automation = () => {
             </div>
           )}
           
-          {/* Conversations or Scheduled Messages List */}
-          <div className="flex-1 overflow-y-auto">
+          {/* Conversations or Scheduled Messages List with separate scroll */}
+          <ScrollArea className="flex-1">
             {!showScheduled ? (
               filteredConversations.length > 0 ? (
                 filteredConversations.map((conversation) => (
@@ -211,11 +222,11 @@ const Automation = () => {
                 </button>
               </div>
             )}
-          </div>
+          </ScrollArea>
         </div>
         
         {/* Main Content - Conversation or Scheduled Messages View */}
-        <div className="flex-1 flex flex-col overflow-visible">
+        <div className="flex-1 flex flex-col bg-background">
           {selectedConversation && currentConversation && !showScheduled ? (
             <>
               {/* Conversation Header */}
@@ -255,8 +266,8 @@ const Automation = () => {
                 </div>
               </div>
               
-              {/* Messages */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-background" id="messages-container">
+              {/* Messages with separate scroll */}
+              <ScrollArea className="flex-1 p-4 space-y-4">
                 {currentConversation.messages.map((message) => (
                   <div 
                     key={message.id}
@@ -283,10 +294,11 @@ const Automation = () => {
                     </div>
                   </div>
                 ))}
-              </div>
+                <div ref={messagesEndRef} />
+              </ScrollArea>
               
-              {/* Message Input - positioned at the bottom without obstruction */}
-              <div className="sticky bottom-0 left-0 right-0 w-full bg-card border-t border-border z-10">
+              {/* Message Input - positioned at the bottom */}
+              <div className="sticky bottom-0 w-full bg-card border-t border-border">
                 <MessageComposer 
                   selectedConversation={selectedConversation}
                   conversations={conversations}
@@ -296,7 +308,7 @@ const Automation = () => {
               </div>
             </>
           ) : !showScheduled ? (
-            <div className="flex-1 flex items-center justify-center bg-background">
+            <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
                 <Inbox size={48} className="mx-auto mb-4 text-muted-foreground" />
                 <h3 className="text-lg font-medium mb-2">No conversation selected</h3>
@@ -304,7 +316,7 @@ const Automation = () => {
               </div>
             </div>
           ) : (
-            <div className="flex-1 flex items-center justify-center bg-background">
+            <div className="flex-1 flex items-center justify-center">
               <div className="text-center max-w-md p-6">
                 <Clock size={48} className="mx-auto mb-4 text-muted-foreground" />
                 <h3 className="text-xl font-medium mb-3">Scheduled Messages View</h3>
