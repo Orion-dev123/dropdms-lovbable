@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Inbox, Send, Clock, Filter, Search, Plus } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
@@ -55,7 +56,7 @@ const Automation = () => {
   };
   
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full overflow-hidden">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end mb-2">
         <div className="flex items-center gap-3">
           <button 
@@ -77,7 +78,7 @@ const Automation = () => {
         </div>
       </div>
 
-      <div className="flex flex-1 h-[calc(100vh-120px)]">
+      <div className="flex flex-1 h-full overflow-hidden">
         <div className="w-80 border-r border-border flex flex-col bg-card">
           <div className="p-3 border-b border-border flex items-center justify-between">
             <h2 className="font-medium">
@@ -206,7 +207,7 @@ const Automation = () => {
           </ScrollArea>
         </div>
         
-        <div className="flex-1 flex flex-col bg-background">
+        <div className="flex-1 flex flex-col bg-background overflow-hidden">
           {selectedConversation && currentConversation && !showScheduled ? (
             <>
               <div className="p-3 border-b border-border flex items-center justify-between bg-card">
@@ -275,12 +276,14 @@ const Automation = () => {
                 <div ref={messagesEndRef} />
               </ScrollArea>
               
-              <MessageComposer 
-                selectedConversation={selectedConversation}
-                conversations={conversations}
-                setConversations={setConversations}
-                onSchedule={() => setIsScheduleDialogOpen(true)}
-              />
+              <div className="flex-shrink-0">
+                <MessageComposer 
+                  selectedConversation={selectedConversation}
+                  conversations={conversations}
+                  setConversations={setConversations}
+                  onSchedule={() => setIsScheduleDialogOpen(true)}
+                />
+              </div>
             </>
           ) : !showScheduled ? (
             <div className="flex-1 flex items-center justify-center">
