@@ -1,6 +1,6 @@
-
 import React, { useState } from 'react';
 import { Send, List, Grid, ChevronRight, User, MessageSquare, Clock } from 'lucide-react';
+import { Button } from "@/components/ui/button";
 
 // Campaign types for tabs
 type CampaignStatus = 'Active' | 'Draft' | 'Completed';
@@ -103,21 +103,9 @@ const Campaigns = () => {
   
   return (
     <div className="p-6 animate-fade-in">
-      <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold">Campaigns</h1>
-          <p className="text-muted-foreground">Create and manage your DM campaigns</p>
-        </div>
-        
-        <div className="mt-4 sm:mt-0">
-          <button 
-            onClick={toggleCampaignCreation}
-            className="px-4 py-2 bg-yellow text-primary-foreground rounded-md flex items-center gap-2 hover-scale"
-          >
-            <Send size={16} />
-            <span>New Campaign</span>
-          </button>
-        </div>
+      <div className="mb-6">
+        <h1 className="text-2xl font-semibold">Campaigns</h1>
+        <p className="text-muted-foreground">Create and manage your DM campaigns</p>
       </div>
       
       {/* Tabs and View Toggle */}
@@ -157,23 +145,33 @@ const Campaigns = () => {
           </button>
         </div>
         
-        <div className="mt-4 sm:mt-0 flex items-center space-x-2 bg-secondary/50 rounded-md p-1">
-          <button 
-            onClick={() => setViewMode('list')}
-            className={`p-1.5 rounded-md ${
-              viewMode === 'list' ? 'bg-card shadow-sm' : 'text-muted-foreground'
-            }`}
+        <div className="mt-4 sm:mt-0 flex items-center space-x-2">
+          <div className="bg-secondary/50 rounded-md p-1 flex items-center space-x-2 mr-2">
+            <button 
+              onClick={() => setViewMode('list')}
+              className={`p-1.5 rounded-md ${
+                viewMode === 'list' ? 'bg-card shadow-sm' : 'text-muted-foreground'
+              }`}
+            >
+              <List size={18} />
+            </button>
+            <button 
+              onClick={() => setViewMode('grid')}
+              className={`p-1.5 rounded-md ${
+                viewMode === 'grid' ? 'bg-card shadow-sm' : 'text-muted-foreground'
+              }`}
+            >
+              <Grid size={18} />
+            </button>
+          </div>
+          
+          <Button 
+            onClick={toggleCampaignCreation}
+            className="flex items-center gap-2 bg-yellow text-primary-foreground hover:bg-yellow/90"
           >
-            <List size={18} />
-          </button>
-          <button 
-            onClick={() => setViewMode('grid')}
-            className={`p-1.5 rounded-md ${
-              viewMode === 'grid' ? 'bg-card shadow-sm' : 'text-muted-foreground'
-            }`}
-          >
-            <Grid size={18} />
-          </button>
+            <Send size={16} />
+            <span>New Campaign</span>
+          </Button>
         </div>
       </div>
       
