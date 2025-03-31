@@ -19,28 +19,23 @@ const Automation = () => {
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
-  // Get the selected conversation data
   const currentConversation = conversations.find(conv => conv.id === selectedConversation);
   
-  // Scroll to bottom of messages when conversation changes or new message is added
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [currentConversation?.messages]);
 
-  // Filter conversations based on search query
   const filteredConversations = conversations.filter(conv => 
     conv.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     conv.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
     conv.lastMessage.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Handle conversation click
   const handleConversationClick = (id: number) => {
     setSelectedConversation(id);
     
-    // Mark conversation as read
     setConversations(prevConversations => 
       prevConversations.map(conv => {
         if (conv.id === id && conv.unread) {
@@ -51,7 +46,6 @@ const Automation = () => {
     );
   };
 
-  // Delete scheduled message
   const handleDeleteScheduledMessage = (id: number) => {
     setScheduledMessages(scheduledMessages.filter(msg => msg.id !== id));
     toast({
@@ -62,7 +56,7 @@ const Automation = () => {
   
   return (
     <div className="flex flex-col h-full">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end mb-2">
         <div className="flex items-center gap-3">
           <button 
             onClick={() => setShowScheduled(!showScheduled)}
@@ -84,7 +78,6 @@ const Automation = () => {
       </div>
 
       <div className="flex flex-1 h-[calc(100vh-120px)]">
-        {/* Left Sidebar - Conversations */}
         <div className="w-80 border-r border-border flex flex-col bg-card">
           <div className="p-3 border-b border-border flex items-center justify-between">
             <h2 className="font-medium">
@@ -97,23 +90,19 @@ const Automation = () => {
             )}
           </div>
           
-          {/* Search input */}
-          {!showScheduled && (
-            <div className="p-3 border-b border-border">
-              <div className="relative">
-                <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                <input
-                  type="search"
-                  placeholder="Search conversations..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 p-2 bg-background border border-border rounded-md focus:outline-none focus:ring-1 focus:ring-yellow/50"
-                />
-              </div>
+          <div className="p-3 border-b border-border">
+            <div className="relative">
+              <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <input
+                type="search"
+                placeholder="Search conversations..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 p-2 bg-background border border-border rounded-md focus:outline-none focus:ring-1 focus:ring-yellow/50"
+              />
             </div>
-          )}
+          </div>
           
-          {/* Conversations or Scheduled Messages List with separate scroll */}
           <ScrollArea className="flex-1">
             {!showScheduled ? (
               filteredConversations.length > 0 ? (
@@ -217,11 +206,9 @@ const Automation = () => {
           </ScrollArea>
         </div>
         
-        {/* Main Content - Conversation or Scheduled Messages View */}
         <div className="flex-1 flex flex-col bg-background">
           {selectedConversation && currentConversation && !showScheduled ? (
             <>
-              {/* Conversation Header */}
               <div className="p-3 border-b border-border flex items-center justify-between bg-card">
                 <div className="flex items-center">
                   <div className="mr-3">
@@ -258,7 +245,6 @@ const Automation = () => {
                 </div>
               </div>
               
-              {/* Messages with separate scroll */}
               <ScrollArea className="flex-1 p-4 space-y-4">
                 {currentConversation.messages.map((message) => (
                   <div 
@@ -289,15 +275,12 @@ const Automation = () => {
                 <div ref={messagesEndRef} />
               </ScrollArea>
               
-              {/* Message Input - positioned at the bottom */}
-              <div className="sticky bottom-0 w-full bg-card border-t border-border">
-                <MessageComposer 
-                  selectedConversation={selectedConversation}
-                  conversations={conversations}
-                  setConversations={setConversations}
-                  onSchedule={() => setIsScheduleDialogOpen(true)}
-                />
-              </div>
+              <MessageComposer 
+                selectedConversation={selectedConversation}
+                conversations={conversations}
+                setConversations={setConversations}
+                onSchedule={() => setIsScheduleDialogOpen(true)}
+              />
             </>
           ) : !showScheduled ? (
             <div className="flex-1 flex items-center justify-center">
@@ -325,7 +308,6 @@ const Automation = () => {
           )}
         </div>
 
-        {/* Schedule Message Dialog */}
         <ScheduleMessageDialog 
           isOpen={isScheduleDialogOpen}
           onClose={() => setIsScheduleDialogOpen(false)}
