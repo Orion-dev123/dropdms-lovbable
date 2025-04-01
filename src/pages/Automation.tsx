@@ -1,12 +1,19 @@
-
 import React, { useState } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { conversationsData as initialConversations } from '../data/conversations';
 import { Conversation } from '@/utils/messageUtils';
-import { Search, Send } from 'lucide-react';
+import { Search, Send, Filter } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuCheckboxItem, 
+  DropdownMenuLabel, 
+  DropdownMenuSeparator, 
+  DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu";
 
 const Automation = () => {
   const { toast } = useToast();
@@ -14,6 +21,10 @@ const Automation = () => {
   const [selectedConversation, setSelectedConversation] = useState<number | null>(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [messageText, setMessageText] = useState('');
+  const [filters, setFilters] = useState({
+    replied: false,
+    notReplied: false,
+  });
   
   const currentConversation = conversations.find(conv => conv.id === selectedConversation);
 
@@ -81,80 +92,137 @@ const Automation = () => {
     }).format(date);
   };
 
+  const hasReplies = (conversation: Conversation) => {
+    return conversation.messages.some(msg => msg.sender !== 'user');
+  };
+
+  const filteredConversations = conversations.filter(conv => {
+    const matchesSearch = conv.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          conv.lastMessage.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    let matchesReplyFilter = true;
+    if (filters.replied && !hasReplies(conv)) matchesReplyFilter = false;
+    if (filters.notReplied && hasReplies(conv)) matchesReplyFilter = false;
+    
+    return matchesSearch && matchesReplyFilter;
+  });
+
+  const handleFilterChange = (key: 'replied' | 'notReplied') => {
+    setFilters(prev => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
+  };
+
   return (
     <div className="h-full flex">
-      {/* Left sidebar with conversations */}
       <div className="w-80 border-r border-border flex flex-col h-full bg-card">
-        {/* Search bar */}
         <div className="p-4 border-b border-border">
-          <div className="relative flex items-center">
-            <Input
-              type="text"
-              placeholder="Search conversations..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pr-10"
-            />
-            <Search className="absolute right-3 text-muted-foreground" size={18} />
+          <div className="relative flex items-center gap-2">
+            <div className="relative flex-1">
+              <Input
+                type="text"
+                placeholder="Search conversations..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pr-10"
+              />
+              <Search className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+            </div>
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="icon" className="h-10 w-10">
+                  <Filter size={18} className="text-muted-foreground" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56 bg-card">
+                <DropdownMenuLabel>Filter Conversations</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuCheckboxItem 
+                  checked={filters.replied}
+                  onCheckedChange={() => handleFilterChange('replied')}
+                >
+                  Has replied
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem 
+                  checked={filters.notReplied}
+                  onCheckedChange={() => handleFilterChange('notReplied')}
+                >
+                  Has not replied
+                </DropdownMenuCheckboxItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
         
-        {/* Conversation list */}
         <ScrollArea className="flex-1 overflow-y-auto">
-          {conversations
-            .filter(conv => 
-              conv.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              conv.lastMessage.toLowerCase().includes(searchQuery.toLowerCase())
-            )
-            .map((conversation) => (
-            <div 
-              key={conversation.id}
-              onClick={() => handleConversationClick(conversation.id)}
-              className={`p-4 border-b border-border cursor-pointer hover:bg-secondary/30 transition-colors ${
-                selectedConversation === conversation.id ? 'bg-secondary/50' : ''
-              }`}
-            >
-              <div className="flex items-start">
-                <div className="mr-3 flex-shrink-0">
-                  {conversation.avatar ? (
-                    <img 
-                      src={conversation.avatar} 
-                      alt={conversation.name} 
-                      className="w-10 h-10 rounded-full"
-                    />
-                  ) : (
-                    <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground">
-                      {getInitials(conversation.name)}
-                    </div>
-                  )}
-                </div>
-                
-                <div className="flex-1 min-w-0">
-                  <div className="flex justify-between items-baseline">
-                    <h3 className="font-medium truncate">{conversation.name}</h3>
-                    <span className="text-xs text-muted-foreground ml-2 whitespace-nowrap">{conversation.time}</span>
+          {filteredConversations.length > 0 ? (
+            filteredConversations.map((conversation) => (
+              <div 
+                key={conversation.id}
+                onClick={() => handleConversationClick(conversation.id)}
+                className={`p-4 border-b border-border cursor-pointer hover:bg-secondary/30 transition-colors ${
+                  selectedConversation === conversation.id ? 'bg-secondary/50' : ''
+                }`}
+              >
+                <div className="flex items-start">
+                  <div className="mr-3 flex-shrink-0">
+                    {conversation.avatar ? (
+                      <img 
+                        src={conversation.avatar} 
+                        alt={conversation.name} 
+                        className="w-10 h-10 rounded-full"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground">
+                        {getInitials(conversation.name)}
+                      </div>
+                    )}
                   </div>
                   
-                  <p className="text-sm text-muted-foreground truncate">{conversation.lastMessage}</p>
-                  
-                  <div className="flex items-center mt-1">
-                    <span className="text-xs bg-secondary/50 px-1.5 py-0.5 rounded text-muted-foreground">{conversation.platform}</span>
-                    {conversation.unread && (
-                      <span className="ml-2 w-2 h-2 bg-yellow rounded-full"></span>
-                    )}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-baseline">
+                      <h3 className="font-medium truncate">{conversation.name}</h3>
+                      <span className="text-xs text-muted-foreground ml-2 whitespace-nowrap">{conversation.time}</span>
+                    </div>
+                    
+                    <p className="text-sm text-muted-foreground truncate">{conversation.lastMessage}</p>
+                    
+                    <div className="flex items-center mt-1">
+                      <span className="text-xs bg-secondary/50 px-1.5 py-0.5 rounded text-muted-foreground">{conversation.platform}</span>
+                      {conversation.unread && (
+                        <span className="ml-2 w-2 h-2 bg-yellow rounded-full"></span>
+                      )}
+                      {hasReplies(conversation) && (
+                        <span className="ml-2 text-xs text-muted-foreground">has replies</span>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
+            ))
+          ) : (
+            <div className="p-8 text-center text-muted-foreground">
+              <p>No conversations match your filters</p>
+              <Button 
+                variant="outline" 
+                className="mt-2" 
+                onClick={() => {
+                  setSearchQuery('');
+                  setFilters({ replied: false, notReplied: false });
+                }}
+              >
+                Clear filters
+              </Button>
             </div>
-          ))}
+          )}
         </ScrollArea>
       </div>
       
-      {/* Right message area */}
       <div className="flex-1 flex flex-col h-full">
         {currentConversation ? (
           <>
-            {/* Header */}
             <div className="p-4 border-b border-border flex justify-between items-center bg-card">
               <div className="flex items-center">
                 <div className="mr-3">
@@ -182,7 +250,6 @@ const Automation = () => {
               <Button variant="outline">View</Button>
             </div>
             
-            {/* Messages area */}
             <ScrollArea className="flex-1 p-6">
               <div className="space-y-6 pb-4">
                 {currentConversation.messages.map((message) => (
@@ -209,7 +276,6 @@ const Automation = () => {
               </div>
             </ScrollArea>
             
-            {/* Message input */}
             <div className="p-4 border-t border-border mt-auto">
               <div className="flex items-center">
                 <Input
