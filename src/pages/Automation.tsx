@@ -55,7 +55,7 @@ const Automation = () => {
         onOpenScheduleDialog={() => setIsScheduleDialogOpen(true)} 
       />
 
-      <div className="flex flex-1 h-full overflow-hidden">
+      <div className="flex flex-1 h-[calc(100vh-100px)] overflow-hidden">
         {!showScheduled ? (
           <ConversationList 
             showScheduled={showScheduled}
@@ -68,7 +68,7 @@ const Automation = () => {
             onOpenScheduleDialog={() => setIsScheduleDialogOpen(true)}
           />
         ) : (
-          <div className="w-80 border-r border-border flex flex-col bg-card">
+          <div className="w-80 border-r border-border flex flex-col h-full bg-card overflow-hidden">
             <div className="p-3 border-b border-border">
               <h2 className="font-medium">Scheduled Messages</h2>
             </div>
@@ -80,7 +80,7 @@ const Automation = () => {
           </div>
         )}
         
-        <div className="flex-1 flex flex-col bg-background overflow-hidden">
+        <div className="flex-1 flex flex-col h-full bg-background overflow-hidden">
           {selectedConversation && currentConversation && !showScheduled ? (
             <>
               <ConversationHeader conversation={currentConversation} />

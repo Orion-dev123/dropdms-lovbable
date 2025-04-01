@@ -33,8 +33,8 @@ const ConversationList: React.FC<ConversationListProps> = ({
   );
 
   return (
-    <div className="w-80 border-r border-border flex flex-col bg-card">
-      <div className="p-3 border-b border-border flex items-center justify-between">
+    <div className="w-80 border-r border-border flex flex-col h-full bg-card overflow-hidden">
+      <div className="p-3 border-b border-border flex-shrink-0">
         <h2 className="font-medium">
           {showScheduled ? 'Scheduled Messages' : 'Conversations'}
         </h2>
@@ -45,7 +45,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
         )}
       </div>
       
-      <div className="p-3 border-b border-border">
+      <div className="p-3 border-b border-border flex-shrink-0">
         <div className="relative">
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
           <input
@@ -82,7 +82,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
         </div>
       </div>
       
-      <ScrollArea className="flex-1">
+      <ScrollArea className="flex-1 overflow-y-auto">
         {filteredConversations.length > 0 ? (
           filteredConversations.map((conversation) => (
             <div 

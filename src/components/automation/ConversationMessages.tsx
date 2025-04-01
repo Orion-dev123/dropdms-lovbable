@@ -17,34 +17,36 @@ const ConversationMessages: React.FC<ConversationMessagesProps> = ({ conversatio
   }, [conversation.messages]);
   
   return (
-    <ScrollArea className="flex-1 p-4 space-y-4">
-      {conversation.messages.map((message) => (
-        <div 
-          key={message.id}
-          className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-        >
+    <ScrollArea className="flex-1 p-4 space-y-4 h-full overflow-y-auto">
+      <div className="space-y-4 pb-2">
+        {conversation.messages.map((message) => (
           <div 
-            className={`max-w-[70%] rounded-lg p-3 ${
-              message.sender === 'user' 
-                ? 'bg-yellow/10 text-foreground' 
-                : 'bg-secondary text-foreground'
-            }`}
+            key={message.id}
+            className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
           >
-            <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-            <div className="flex items-center justify-end mt-1">
-              <span className="text-xs text-muted-foreground">
-                {formatScheduledDate(message.time)}
-              </span>
-              {message.sender === 'user' && (
-                <span className="ml-1 text-xs text-muted-foreground">
-                  {message.status === 'delivered' ? '✓' : message.status === 'read' ? '✓✓' : ''}
+            <div 
+              className={`max-w-[70%] rounded-lg p-3 ${
+                message.sender === 'user' 
+                  ? 'bg-yellow/10 text-foreground' 
+                  : 'bg-secondary text-foreground'
+              }`}
+            >
+              <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+              <div className="flex items-center justify-end mt-1">
+                <span className="text-xs text-muted-foreground">
+                  {formatScheduledDate(message.time)}
                 </span>
-              )}
+                {message.sender === 'user' && (
+                  <span className="ml-1 text-xs text-muted-foreground">
+                    {message.status === 'delivered' ? '✓' : message.status === 'read' ? '✓✓' : ''}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      ))}
-      <div ref={messagesEndRef} />
+        ))}
+        <div ref={messagesEndRef} />
+      </div>
     </ScrollArea>
   );
 };
