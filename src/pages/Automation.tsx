@@ -64,6 +64,8 @@ const Automation = () => {
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
             handleConversationClick={handleConversationClick}
+            setShowScheduled={setShowScheduled}
+            onOpenScheduleDialog={() => setIsScheduleDialogOpen(true)}
           />
         ) : (
           <div className="w-80 border-r border-border flex flex-col bg-card">

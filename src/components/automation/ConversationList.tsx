@@ -1,8 +1,9 @@
 
 import React from 'react';
-import { Inbox, Filter, Search } from 'lucide-react';
+import { Inbox, Filter, Search, Clock, Plus } from 'lucide-react';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Conversation, getInitials } from '@/utils/messageUtils';
+import { Button } from "@/components/ui/button";
 
 interface ConversationListProps {
   showScheduled: boolean;
@@ -11,6 +12,8 @@ interface ConversationListProps {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   handleConversationClick: (id: number) => void;
+  setShowScheduled: (show: boolean) => void;
+  onOpenScheduleDialog: () => void;
 }
 
 const ConversationList: React.FC<ConversationListProps> = ({
@@ -19,7 +22,9 @@ const ConversationList: React.FC<ConversationListProps> = ({
   selectedConversation,
   searchQuery,
   setSearchQuery,
-  handleConversationClick
+  handleConversationClick,
+  setShowScheduled,
+  onOpenScheduleDialog
 }) => {
   const filteredConversations = conversations.filter(conv => 
     conv.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -50,6 +55,30 @@ const ConversationList: React.FC<ConversationListProps> = ({
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 p-2 bg-background border border-border rounded-md focus:outline-none focus:ring-1 focus:ring-yellow/50"
           />
+        </div>
+        
+        {/* Added buttons here */}
+        <div className="flex items-center justify-between mt-3 gap-2">
+          <Button 
+            variant="outline" 
+            size="sm"
+            className={`flex-1 ${
+              showScheduled ? 'bg-yellow/10 text-yellow' : 'text-muted-foreground hover:text-foreground'
+            }`}
+            onClick={() => setShowScheduled(!showScheduled)}
+          >
+            <Clock size={16} className="mr-2" />
+            {showScheduled ? 'View Conversations' : 'View Scheduled'}
+          </Button>
+          <Button 
+            variant="default" 
+            size="sm"
+            className="flex-1 bg-yellow text-primary-foreground hover:bg-yellow/90"
+            onClick={onOpenScheduleDialog}
+          >
+            <Plus size={16} className="mr-2" />
+            New Message
+          </Button>
         </div>
       </div>
       
