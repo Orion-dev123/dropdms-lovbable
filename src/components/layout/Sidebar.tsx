@@ -7,7 +7,8 @@ import {
   Send, 
   Inbox, 
   UserCircle, 
-  Globe
+  Globe,
+  Share2
 } from 'lucide-react';
 
 const sidebarItems = [
@@ -31,6 +32,11 @@ const sidebarItems = [
     path: '/automation', 
     icon: Inbox, 
     label: 'Inbox'
+  },
+  { 
+    path: '/social-profiles', 
+    icon: Share2, 
+    label: 'Social Profiles'
   },
   { 
     path: '/proxy-profiles', 
