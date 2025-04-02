@@ -1,5 +1,6 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Card, 
   CardContent, 
@@ -25,16 +26,28 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Instagram, Twitter, Facebook, Linkedin, Plus, Trash2 } from 'lucide-react';
+import { Instagram, Twitter, Facebook, Linkedin, Plus, Trash2, ExternalLink, Check } from 'lucide-react';
+import { useToast } from '@/components/ui/use-toast';
 
 // Sample data for proxy profiles
 const proxyProfiles = [
-  { id: '1', name: 'United States' },
-  { id: '2', name: 'Europe' },
-  { id: '3', name: 'Asia' },
+  { id: '1', name: 'United States', location: 'US' },
+  { id: '2', name: 'Europe', location: 'EU' },
+  { id: '3', name: 'Asia', location: 'ASIA' },
+  { id: '4', name: 'Germany', location: 'DE' },
+  { id: '5', name: 'France', location: 'FR' },
+  { id: '6', name: 'United Kingdom', location: 'UK' },
 ];
 
 // Schema for form validation
@@ -55,9 +68,53 @@ const socialPlatforms = [
   { id: 'linkedin', name: 'LinkedIn', icon: Linkedin },
 ];
 
+// Mock data for pre-populated social profiles
+const mockProfiles = [
+  {
+    id: '1',
+    platform: 'instagram',
+    platformName: 'Instagram',
+    icon: Instagram,
+    username: 'design_masters',
+    apiKey: 'insta123456789',
+    proxyProfileId: '1',
+    proxyProfileName: 'United States',
+    stats: { followers: 5678, following: 234, posts: 127 }
+  },
+  {
+    id: '2',
+    platform: 'twitter',
+    platformName: 'Twitter',
+    icon: Twitter,
+    username: 'tech_updates',
+    apiKey: 'twtr987654321',
+    proxyProfileId: '2',
+    proxyProfileName: 'Europe',
+    stats: { followers: 10243, following: 521, tweets: 1503 }
+  },
+  {
+    id: '3',
+    platform: 'linkedin',
+    platformName: 'LinkedIn',
+    icon: Linkedin,
+    username: 'professional_network',
+    apiKey: 'lkdn123456789',
+    proxyProfileId: '3',
+    proxyProfileName: 'Asia',
+    stats: { connections: 2456, posts: 78 }
+  }
+];
+
 const SocialProfiles = () => {
   const [profiles, setProfiles] = useState<any[]>([]);
   const [isAddingNew, setIsAddingNew] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  // Initialize with mock data
+  useEffect(() => {
+    setProfiles(mockProfiles);
+  }, []);
 
   // Initialize the form
   const form = useForm<SocialProfileFormValues>({
@@ -83,15 +140,63 @@ const SocialProfiles = () => {
       apiKey: data.apiKey,
       proxyProfileId: data.proxyProfileId,
       proxyProfileName: proxyProfile?.name,
+      stats: generateMockStats(data.platform)
     };
 
     setProfiles([...profiles, newProfile]);
     setIsAddingNew(false);
     form.reset();
+    
+    toast({
+      title: "Profile Added",
+      description: `${platform?.name} profile for @${data.username} has been successfully added.`,
+    });
   };
 
   const deleteProfile = (id: string) => {
+    const profileToDelete = profiles.find(profile => profile.id === id);
     setProfiles(profiles.filter(profile => profile.id !== id));
+    
+    toast({
+      title: "Profile Deleted",
+      description: `${profileToDelete?.platformName} profile for @${profileToDelete?.username} has been removed.`,
+      variant: "destructive",
+    });
+  };
+
+  const navigateToProxyProfile = (proxyProfileId: string) => {
+    navigate(`/proxy-profiles?id=${proxyProfileId}`);
+  };
+
+  // Generate random mock stats based on platform
+  const generateMockStats = (platform: string) => {
+    switch (platform) {
+      case 'instagram':
+        return { followers: Math.floor(Math.random() * 10000), following: Math.floor(Math.random() * 1000), posts: Math.floor(Math.random() * 500) };
+      case 'twitter':
+        return { followers: Math.floor(Math.random() * 15000), following: Math.floor(Math.random() * 2000), tweets: Math.floor(Math.random() * 3000) };
+      case 'facebook':
+        return { friends: Math.floor(Math.random() * 5000), likes: Math.floor(Math.random() * 10000) };
+      case 'linkedin':
+        return { connections: Math.floor(Math.random() * 3000), posts: Math.floor(Math.random() * 200) };
+      default:
+        return {};
+    }
+  };
+
+  const getPlatformColor = (platform: string) => {
+    switch (platform) {
+      case 'instagram':
+        return 'bg-gradient-to-r from-pink-500 to-purple-500';
+      case 'twitter':
+        return 'bg-blue-400';
+      case 'facebook':
+        return 'bg-blue-600';
+      case 'linkedin':
+        return 'bg-blue-800';
+      default:
+        return 'bg-slate-500';
+    }
   };
 
   return (
@@ -169,9 +274,23 @@ const SocialProfiles = () => {
                           <SelectContent>
                             {proxyProfiles.map((profile) => (
                               <SelectItem key={profile.id} value={profile.id}>
-                                {profile.name}
+                                <div className="flex items-center justify-between w-full">
+                                  <span>{profile.name}</span>
+                                  <span className="text-xs bg-muted px-1 rounded">{profile.location}</span>
+                                </div>
                               </SelectItem>
                             ))}
+                            <div className="p-2 border-t">
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className="w-full flex items-center justify-center gap-2"
+                                onClick={() => navigate('/proxy-profiles')}
+                              >
+                                <Plus size={14} />
+                                <span>Add New Proxy Profile</span>
+                              </Button>
+                            </div>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -243,29 +362,138 @@ const SocialProfiles = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {profiles.map((profile) => {
             const PlatformIcon = profile.icon;
+            const platformColorClass = getPlatformColor(profile.platform);
+            
             return (
-              <Card key={profile.id}>
+              <Card key={profile.id} className="overflow-hidden">
+                <div className={`h-3 w-full ${platformColorClass}`}></div>
                 <CardHeader className="pb-2">
-                  <CardTitle className="flex items-center gap-2">
-                    <PlatformIcon size={20} />
-                    {profile.platformName}
-                  </CardTitle>
+                  <div className="flex justify-between items-start">
+                    <CardTitle className="flex items-center gap-2">
+                      <PlatformIcon size={20} />
+                      {profile.platformName}
+                    </CardTitle>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                          <span className="sr-only">Open menu</span>
+                          <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-4 w-4">
+                            <path d="M3.625 7.5C3.625 8.12132 3.12132 8.625 2.5 8.625C1.87868 8.625 1.375 8.12132 1.375 7.5C1.375 6.87868 1.87868 6.375 2.5 6.375C3.12132 6.375 3.625 6.87868 3.625 7.5ZM8.625 7.5C8.625 8.12132 8.12132 8.625 7.5 8.625C6.87868 8.625 6.375 8.12132 6.375 7.5C6.375 6.87868 6.87868 6.375 7.5 6.375C8.12132 6.375 8.625 6.87868 8.625 7.5ZM13.625 7.5C13.625 8.12132 13.1213 8.625 12.5 8.625C11.8787 8.625 11.375 8.12132 11.375 7.5C11.375 6.87868 11.8787 6.375 12.5 6.375C13.1213 6.375 13.625 6.87868 13.625 7.5Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path>
+                          </svg>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuItem onClick={() => console.log('Edit')}>
+                          <Check className="mr-2 h-4 w-4" /> Verify Account
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => console.log('View Stats')}>
+                          View Statistics
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={() => deleteProfile(profile.id)} className="text-red-500">
+                          <Trash2 className="mr-2 h-4 w-4" /> Delete Profile
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
                   <CardDescription>
                     @{profile.username}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="text-sm">
-                    <div className="mb-1">
-                      <span className="font-medium">Proxy Profile:</span> {profile.proxyProfileName}
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-medium">Proxy Profile:</span> 
+                      <Button 
+                        variant="link" 
+                        className="p-0 h-auto flex items-center gap-1 text-sm text-blue-500"
+                        onClick={() => navigateToProxyProfile(profile.proxyProfileId)}
+                      >
+                        {profile.proxyProfileName}
+                        <ExternalLink size={12} />
+                      </Button>
                     </div>
-                    <div className="mb-1">
+                    <div className="mb-3">
                       <span className="font-medium">API Key:</span> ••••••••••••{profile.apiKey.slice(-4)}
                     </div>
+                    
+                    {/* Platform-specific stats */}
+                    {profile.stats && (
+                      <div className="grid grid-cols-3 gap-2 mt-4 pt-2 border-t">
+                        {profile.platform === 'instagram' && (
+                          <>
+                            <div className="text-center">
+                              <div className="font-bold">{profile.stats.followers.toLocaleString()}</div>
+                              <div className="text-xs text-muted-foreground">Followers</div>
+                            </div>
+                            <div className="text-center">
+                              <div className="font-bold">{profile.stats.following.toLocaleString()}</div>
+                              <div className="text-xs text-muted-foreground">Following</div>
+                            </div>
+                            <div className="text-center">
+                              <div className="font-bold">{profile.stats.posts.toLocaleString()}</div>
+                              <div className="text-xs text-muted-foreground">Posts</div>
+                            </div>
+                          </>
+                        )}
+                        {profile.platform === 'twitter' && (
+                          <>
+                            <div className="text-center">
+                              <div className="font-bold">{profile.stats.followers.toLocaleString()}</div>
+                              <div className="text-xs text-muted-foreground">Followers</div>
+                            </div>
+                            <div className="text-center">
+                              <div className="font-bold">{profile.stats.following.toLocaleString()}</div>
+                              <div className="text-xs text-muted-foreground">Following</div>
+                            </div>
+                            <div className="text-center">
+                              <div className="font-bold">{profile.stats.tweets.toLocaleString()}</div>
+                              <div className="text-xs text-muted-foreground">Tweets</div>
+                            </div>
+                          </>
+                        )}
+                        {profile.platform === 'facebook' && (
+                          <>
+                            <div className="text-center">
+                              <div className="font-bold">{profile.stats.friends.toLocaleString()}</div>
+                              <div className="text-xs text-muted-foreground">Friends</div>
+                            </div>
+                            <div className="text-center">
+                              <div className="font-bold">{profile.stats.likes.toLocaleString()}</div>
+                              <div className="text-xs text-muted-foreground">Likes</div>
+                            </div>
+                            <div className="text-center">
+                              <div className="font-bold">-</div>
+                              <div className="text-xs text-muted-foreground">-</div>
+                            </div>
+                          </>
+                        )}
+                        {profile.platform === 'linkedin' && (
+                          <>
+                            <div className="text-center">
+                              <div className="font-bold">{profile.stats.connections.toLocaleString()}</div>
+                              <div className="text-xs text-muted-foreground">Connections</div>
+                            </div>
+                            <div className="text-center">
+                              <div className="font-bold">{profile.stats.posts.toLocaleString()}</div>
+                              <div className="text-xs text-muted-foreground">Posts</div>
+                            </div>
+                            <div className="text-center">
+                              <div className="font-bold">-</div>
+                              <div className="text-xs text-muted-foreground">-</div>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </CardContent>
-                <CardFooter className="justify-end">
-                  <Button variant="outline" size="sm" onClick={() => deleteProfile(profile.id)}>
+                <CardFooter className="justify-between border-t pt-4">
+                  <Button variant="outline" size="sm">
+                    View Activity
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={() => deleteProfile(profile.id)} className="text-red-500">
                     <Trash2 size={16} className="mr-1" /> Delete
                   </Button>
                 </CardFooter>
