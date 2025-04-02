@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Bell, HelpCircle, UserCircle, Moon, Sun } from 'lucide-react';
 import { Switch } from "@/components/ui/switch";
-import { Location } from 'react-router-dom';
+import { Location, useNavigate } from 'react-router-dom';
 
 // Map of routes to their display names
 const routeTitles: Record<string, string> = {
@@ -19,6 +19,7 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ location }) => {
+  const navigate = useNavigate();
   const [isDarkTheme, setIsDarkTheme] = useState(true);
   
   // Get the current page title from the location pathname
@@ -35,6 +36,11 @@ const Navbar: React.FC<NavbarProps> = ({ location }) => {
     } else {
       document.documentElement.classList.add('light-theme');
     }
+  };
+  
+  // Navigate to settings page
+  const navigateToSettings = () => {
+    navigate('/settings');
   };
   
   // Initialize theme on component mount
@@ -82,7 +88,10 @@ const Navbar: React.FC<NavbarProps> = ({ location }) => {
           <HelpCircle size={20} className="text-muted-foreground hover:text-foreground" />
         </button>
         
-        <div className="flex items-center space-x-2 pl-2 border-l border-border">
+        <div 
+          className="flex items-center space-x-2 pl-2 border-l border-border cursor-pointer hover:bg-secondary/50 rounded-md px-2 py-1 transition-all duration-200"
+          onClick={navigateToSettings}
+        >
           <UserCircle size={28} className="text-yellow/90" />
           <div className="hidden md:block">
             <p className="text-sm font-medium">John Doe</p>
