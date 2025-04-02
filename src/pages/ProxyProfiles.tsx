@@ -126,10 +126,19 @@ const ProxyProfiles = () => {
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex justify-end">
+      <div className="flex items-center space-x-4">
+        <div className="relative flex-grow">
+          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search profiles by name, location or type..."
+            className="pl-10"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
         <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-yellow text-yellow-foreground hover:bg-yellow/90">
+            <Button className="bg-yellow text-yellow-foreground hover:bg-yellow/90 flex-shrink-0">
               <Plus className="mr-2 h-4 w-4" /> New Profile
             </Button>
           </DialogTrigger>
@@ -147,16 +156,6 @@ const ProxyProfiles = () => {
 
       <div className="flex gap-6">
         <div className="w-2/3 space-y-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search profiles by name, location or type..."
-              className="pl-10"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-
           <div className="space-y-2">
             {filteredProxies.map((proxy) => (
               <div 
