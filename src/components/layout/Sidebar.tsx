@@ -6,7 +6,7 @@ import {
   Users, 
   Send, 
   Inbox, 
-  Settings, 
+  UserCircle, 
   Globe
 } from 'lucide-react';
 
@@ -39,8 +39,8 @@ const sidebarItems = [
   },
   { 
     path: '/settings', 
-    icon: Settings, 
-    label: 'Settings'
+    icon: UserCircle, 
+    label: 'Profile'
   }
 ];
 
