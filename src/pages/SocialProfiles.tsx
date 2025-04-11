@@ -13,7 +13,6 @@ import { Instagram, Twitter, Facebook, Linkedin, Plus, Trash2, ExternalLink, Che
 import { useToast } from '@/components/ui/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-// Sample data for proxy profiles
 const proxyProfiles = [{
   id: '1',
   name: 'United States',
@@ -40,7 +39,6 @@ const proxyProfiles = [{
   location: 'UK'
 }];
 
-// Schema for form validation
 const socialProfileSchema = z.object({
   platform: z.string().min(1, "Platform is required"),
   username: z.string().min(1, "Username is required"),
@@ -49,7 +47,6 @@ const socialProfileSchema = z.object({
 });
 type SocialProfileFormValues = z.infer<typeof socialProfileSchema>;
 
-// Social platform options with icons
 const socialPlatforms = [{
   id: 'instagram',
   name: 'Instagram',
@@ -68,7 +65,6 @@ const socialPlatforms = [{
   icon: Linkedin
 }];
 
-// Mock data for pre-populated social profiles
 const mockProfiles = [{
   id: '1',
   platform: 'instagram',
@@ -117,6 +113,7 @@ const mockProfiles = [{
   status: 'pending',
   lastUpdated: '2023-10-12T11:05:00Z'
 }];
+
 const SocialProfiles = () => {
   const [profiles, setProfiles] = useState<any[]>([]);
   const [isAddingNew, setIsAddingNew] = useState(false);
@@ -126,12 +123,10 @@ const SocialProfiles = () => {
     toast
   } = useToast();
 
-  // Initialize with mock data
   useEffect(() => {
     setProfiles(mockProfiles);
   }, []);
 
-  // Initialize the form
   const form = useForm<SocialProfileFormValues>({
     resolver: zodResolver(socialProfileSchema),
     defaultValues: {
@@ -141,6 +136,7 @@ const SocialProfiles = () => {
       proxyProfileId: ''
     }
   });
+
   const onSubmit = (data: SocialProfileFormValues) => {
     const platform = socialPlatforms.find(p => p.id === data.platform);
     const proxyProfile = proxyProfiles.find(p => p.id === data.proxyProfileId);
@@ -165,6 +161,7 @@ const SocialProfiles = () => {
       description: `${platform?.name} profile for @${data.username} has been successfully added.`
     });
   };
+
   const deleteProfile = (id: string) => {
     const profileToDelete = profiles.find(profile => profile.id === id);
     setProfiles(profiles.filter(profile => profile.id !== id));
@@ -174,6 +171,7 @@ const SocialProfiles = () => {
       variant: "destructive"
     });
   };
+
   const verifyProfile = (id: string) => {
     setProfiles(profiles.map(profile => profile.id === id ? {
       ...profile,
@@ -185,11 +183,11 @@ const SocialProfiles = () => {
       description: `${profileToVerify?.platformName} profile for @${profileToVerify?.username} has been verified.`
     });
   };
+
   const navigateToProxyProfile = (proxyProfileId: string) => {
     navigate(`/proxy-profiles?id=${proxyProfileId}`);
   };
 
-  // Generate random mock stats based on platform
   const generateMockStats = (platform: string) => {
     switch (platform) {
       case 'instagram':
@@ -218,6 +216,7 @@ const SocialProfiles = () => {
         return {};
     }
   };
+
   const getPlatformColor = (platform: string) => {
     switch (platform) {
       case 'instagram':
@@ -232,6 +231,7 @@ const SocialProfiles = () => {
         return 'bg-slate-500';
     }
   };
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'active':
@@ -248,7 +248,9 @@ const SocialProfiles = () => {
         return null;
     }
   };
+
   const filteredProfiles = activeTab === 'all' ? profiles : profiles.filter(profile => profile.platform === activeTab);
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat('en-US', {
@@ -257,13 +259,37 @@ const SocialProfiles = () => {
       year: 'numeric'
     }).format(date);
   };
-  return <div className="p-6 space-y-6">
+
+  return (
+    <div className="p-6 space-y-6">
       <div className="flex flex-col space-y-4 md:flex-row md:justify-between md:items-center md:space-y-0">
-        <div>
-          
-          
-        </div>
-        <Button onClick={() => setIsAddingNew(true)} className="flex items-center gap-2" disabled={isAddingNew}>
+        <Tabs 
+          defaultValue="all" 
+          className="w-full md:w-auto" 
+          onValueChange={setActiveTab}
+        >
+          <TabsList className="flex flex-wrap justify-start md:justify-center gap-2">
+            <TabsTrigger value="all">All Profiles</TabsTrigger>
+            <TabsTrigger value="instagram" className="flex items-center gap-1">
+              <Instagram size={14} /> Instagram
+            </TabsTrigger>
+            <TabsTrigger value="twitter" className="flex items-center gap-1">
+              <Twitter size={14} /> Twitter
+            </TabsTrigger>
+            <TabsTrigger value="facebook" className="flex items-center gap-1">
+              <Facebook size={14} /> Facebook
+            </TabsTrigger>
+            <TabsTrigger value="linkedin" className="flex items-center gap-1">
+              <Linkedin size={14} /> LinkedIn
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+        
+        <Button 
+          onClick={() => setIsAddingNew(true)} 
+          className="flex items-center gap-2 self-start md:self-auto" 
+          disabled={isAddingNew}
+        >
           <Plus size={16} />
           Add Social Profile
         </Button>
@@ -455,7 +481,6 @@ const SocialProfiles = () => {
                             <span className="text-xs">{formatDate(profile.lastUpdated)}</span>
                           </div>
                           
-                          {/* Platform-specific stats */}
                           {profile.stats && <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t">
                               {profile.platform === 'instagram' && <>
                                   <div className="text-center">
@@ -532,6 +557,8 @@ const SocialProfiles = () => {
             </TabsContent>
           </Tabs>
         </div>}
-    </div>;
+    </div>
+  );
 };
+
 export default SocialProfiles;
