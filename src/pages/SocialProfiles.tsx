@@ -268,7 +268,9 @@ const SocialProfiles = () => {
     }
   };
 
-  const filteredProfiles = activeTab === 'all' ? profiles : profiles.filter(profile => profile.platform === activeTab);
+  const filteredProfiles = activeTab === 'all' 
+    ? profiles 
+    : profiles.filter(profile => profile.platform === activeTab);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -285,7 +287,7 @@ const SocialProfiles = () => {
 
   return <div className="p-6 space-y-6">
       <div className="flex flex-col space-y-4 md:flex-row md:justify-between md:items-center md:space-y-0">
-        <Tabs defaultValue="all" className="w-full md:w-auto" onValueChange={setActiveTab}>
+        <Tabs value={activeTab} defaultValue="all" className="w-full md:w-auto" onValueChange={setActiveTab}>
           <TabsList className="flex flex-wrap justify-start md:justify-center gap-2">
             <TabsTrigger value="all">All Profiles</TabsTrigger>
             <TabsTrigger value="instagram" className="flex items-center gap-1">
@@ -416,155 +418,151 @@ const SocialProfiles = () => {
             </Button>
           </div>
         </Card> : profiles.length > 0 && <div className="space-y-4">
-          <Tabs defaultValue="all" className="w-full" onValueChange={setActiveTab}>
-            
-
-            <TabsContent value={activeTab} className="mt-0">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredProfiles.map(profile => {
-              const PlatformIcon = profile.icon;
-              const platformColorClass = getPlatformColor(profile.platform);
-              return <Card key={profile.id} className="overflow-hidden border hover:shadow-md transition-shadow">
-                      <div className={`h-2 w-full ${platformColorClass}`}></div>
-                      <CardHeader className="pb-2">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <CardTitle className="flex items-center gap-2 mb-1">
-                              <PlatformIcon size={20} />
-                              {profile.platformName}
-                            </CardTitle>
-                            <div className="flex items-center gap-2">
-                              <p className="text-sm font-medium">@{profile.username}</p>
-                              {getStatusBadge(profile.status)}
-                            </div>
-                          </div>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                                <span className="sr-only">Open menu</span>
-                                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-4 w-4">
-                                  <path d="M3.625 7.5C3.625 8.12132 3.12132 8.625 2.5 8.625C1.87868 8.625 1.375 8.12132 1.375 7.5C1.375 6.87868 1.87868 6.375 2.5 6.375C3.12132 6.375 3.625 6.87868 3.625 7.5ZM8.625 7.5C8.625 8.12132 8.12132 8.625 7.5 8.625C6.87868 8.625 6.375 8.12132 6.375 7.5C6.375 6.87868 6.87868 6.375 7.5 6.375C8.12132 6.375 8.625 6.87868 8.625 7.5ZM13.625 7.5C13.625 8.12132 13.1213 8.625 12.5 8.625C11.8787 8.625 11.375 8.12132 11.375 7.5C11.375 6.87868 11.8787 6.375 12.5 6.375C13.1213 6.375 13.625 6.87868 13.625 7.5Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path>
-                                </svg>
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                              {profile.status === 'pending' && <DropdownMenuItem onClick={() => verifyProfile(profile.id)}>
-                                  <Check className="mr-2 h-4 w-4" /> Verify Account
-                                </DropdownMenuItem>}
-                              <DropdownMenuItem onClick={() => console.log('View Stats')}>
-                                <Globe className="mr-2 h-4 w-4" /> View Profile Page
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem onClick={() => deleteProfile(profile.id)} className="text-red-500">
-                                <Trash2 className="mr-2 h-4 w-4" /> Delete Profile
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+          <div className="mt-0">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredProfiles.map(profile => {
+                const PlatformIcon = profile.icon;
+                const platformColorClass = getPlatformColor(profile.platform);
+                return <Card key={profile.id} className="overflow-hidden border hover:shadow-md transition-shadow">
+                  <div className={`h-2 w-full ${platformColorClass}`}></div>
+                  <CardHeader className="pb-2">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <CardTitle className="flex items-center gap-2 mb-1">
+                          <PlatformIcon size={20} />
+                          {profile.platformName}
+                        </CardTitle>
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-medium">@{profile.username}</p>
+                          {getStatusBadge(profile.status)}
                         </div>
-                      </CardHeader>
-                      <CardContent className="pb-3">
-                        <div className="text-sm space-y-3">
-                          <div className="flex items-center justify-between">
-                            <span className="font-medium text-muted-foreground">Profile URL:</span> 
-                            <Button 
-                              variant="link" 
-                              className="p-0 h-auto flex items-center gap-1 text-sm"
-                              onClick={() => openProfileUrl(profile.profileUrl)}
-                            >
-                              Visit Profile
-                              <ExternalLink size={12} />
-                            </Button>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="font-medium text-muted-foreground">Category:</span>
-                            <span className="text-sm">{profile.category}</span>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="font-medium text-muted-foreground">Description:</span>
-                            <span className="text-sm text-right max-w-[200px] truncate">{profile.description}</span>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="font-medium text-muted-foreground">Proxy Profile:</span> 
-                            <Button 
-                              variant="link" 
-                              className="p-0 h-auto flex items-center gap-1 text-sm" 
-                              onClick={() => navigateToProxyProfile(profile.proxyProfileId)}
-                            >
-                              {profile.proxyProfileName}
-                              <ExternalLink size={12} />
-                            </Button>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="font-medium text-muted-foreground">API Key:</span>
-                            <span className="font-mono text-xs bg-muted px-2 py-1 rounded">••••••{profile.apiKey.slice(-4)}</span>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="font-medium text-muted-foreground">Last Updated:</span>
-                            <span className="text-xs">{formatDate(profile.lastUpdated)}</span>
-                          </div>
-                          
-                          {profile.stats && <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t">
-                              {profile.platform === 'instagram' && <>
-                                  <div className="text-center">
-                                    <div className="font-bold">{profile.stats.followers.toLocaleString()}</div>
-                                    <div className="text-xs text-muted-foreground">Followers</div>
-                                  </div>
-                                  <div className="text-center">
-                                    <div className="font-bold">{profile.stats.engagement}</div>
-                                    <div className="text-xs text-muted-foreground">Engagement</div>
-                                  </div>
-                                  <div className="text-center">
-                                    <div className="font-bold">{profile.stats.reachRate}</div>
-                                    <div className="text-xs text-muted-foreground">Reach Rate</div>
-                                  </div>
-                                </>}
-                              {profile.platform === 'twitter' && <>
-                                  <div className="text-center">
-                                    <div className="font-bold">{profile.stats.followers.toLocaleString()}</div>
-                                    <div className="text-xs text-muted-foreground">Followers</div>
-                                  </div>
-                                  <div className="text-center">
-                                    <div className="font-bold">{profile.stats.impressions}</div>
-                                    <div className="text-xs text-muted-foreground">Impressions</div>
-                                  </div>
-                                  <div className="text-center">
-                                    <div className="font-bold">{profile.stats.retweetRate}</div>
-                                    <div className="text-xs text-muted-foreground">Retweet Rate</div>
-                                  </div>
-                                </>}
-                              {profile.platform === 'linkedin' && <>
-                                  <div className="text-center">
-                                    <div className="font-bold">{profile.stats.connections.toLocaleString()}</div>
-                                    <div className="text-xs text-muted-foreground">Connections</div>
-                                  </div>
-                                  <div className="text-center">
-                                    <div className="font-bold">{profile.stats.profileViews}</div>
-                                    <div className="text-xs text-muted-foreground">Profile Views</div>
-                                  </div>
-                                  <div className="text-center">
-                                    <div className="font-bold">{profile.stats.reactions}</div>
-                                    <div className="text-xs text-muted-foreground">Reactions</div>
-                                  </div>
-                                </>}
-                            </div>}
-                        </div>
-                      </CardContent>
-                      <CardFooter className="justify-between border-t pt-3 pb-3">
-                        <Button variant="outline" size="sm" className="text-xs">
-                          View Activity
+                      </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                            <span className="sr-only">Open menu</span>
+                            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-4 w-4">
+                              <path d="M3.625 7.5C3.625 8.12132 3.12132 8.625 2.5 8.625C1.87868 8.625 1.375 8.12132 1.375 7.5C1.375 6.87868 1.87868 6.375 2.5 6.375C3.12132 6.375 3.625 6.87868 3.625 7.5ZM8.625 7.5C8.625 8.12132 8.12132 8.625 7.5 8.625C6.87868 8.625 6.375 8.12132 6.375 7.5C6.375 6.87868 6.87868 6.375 7.5 6.375C8.12132 6.375 8.625 6.87868 8.625 7.5ZM13.625 7.5C13.625 8.12132 13.1213 8.625 12.5 8.625C11.8787 8.625 11.375 8.12132 11.375 7.5C11.375 6.87868 11.8787 6.375 12.5 6.375C13.1213 6.375 13.625 6.87868 13.625 7.5Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path>
+                            </svg>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          {profile.status === 'pending' && <DropdownMenuItem onClick={() => verifyProfile(profile.id)}>
+                              <Check className="mr-2 h-4 w-4" /> Verify Account
+                            </DropdownMenuItem>}
+                          <DropdownMenuItem onClick={() => console.log('View Stats')}>
+                            <Globe className="mr-2 h-4 w-4" /> View Profile Page
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem onClick={() => deleteProfile(profile.id)} className="text-red-500">
+                            <Trash2 className="mr-2 h-4 w-4" /> Delete Profile
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pb-3">
+                    <div className="text-sm space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium text-muted-foreground">Profile URL:</span> 
+                        <Button 
+                          variant="link" 
+                          className="p-0 h-auto flex items-center gap-1 text-sm"
+                          onClick={() => openProfileUrl(profile.profileUrl)}
+                        >
+                          Visit Profile
+                          <ExternalLink size={12} />
                         </Button>
-                        {profile.status === 'pending' ? <Button variant="outline" size="sm" className="text-xs bg-yellow-500/10 border-yellow-500/30 text-yellow-500 hover:text-yellow-600 hover:bg-yellow-500/20" onClick={() => verifyProfile(profile.id)}>
-                            <AlertCircle size={14} className="mr-1" /> Verify
-                          </Button> : <Button variant="outline" size="sm" className="text-xs text-red-500 hover:text-red-600 hover:bg-red-500/10" onClick={() => deleteProfile(profile.id)}>
-                            <Trash2 size={14} className="mr-1" /> Delete
-                          </Button>}
-                      </CardFooter>
-                    </Card>;
-            })}
-              </div>
-            </TabsContent>
-          </Tabs>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium text-muted-foreground">Category:</span>
+                        <span className="text-sm">{profile.category}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium text-muted-foreground">Description:</span>
+                        <span className="text-sm text-right max-w-[200px] truncate">{profile.description}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium text-muted-foreground">Proxy Profile:</span> 
+                        <Button 
+                          variant="link" 
+                          className="p-0 h-auto flex items-center gap-1 text-sm" 
+                          onClick={() => navigateToProxyProfile(profile.proxyProfileId)}
+                        >
+                          {profile.proxyProfileName}
+                          <ExternalLink size={12} />
+                        </Button>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium text-muted-foreground">API Key:</span>
+                        <span className="font-mono text-xs bg-muted px-2 py-1 rounded">••••••{profile.apiKey.slice(-4)}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium text-muted-foreground">Last Updated:</span>
+                        <span className="text-xs">{formatDate(profile.lastUpdated)}</span>
+                      </div>
+                      
+                      {profile.stats && <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t">
+                          {profile.platform === 'instagram' && <>
+                              <div className="text-center">
+                                <div className="font-bold">{profile.stats.followers.toLocaleString()}</div>
+                                <div className="text-xs text-muted-foreground">Followers</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="font-bold">{profile.stats.engagement}</div>
+                                <div className="text-xs text-muted-foreground">Engagement</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="font-bold">{profile.stats.reachRate}</div>
+                                <div className="text-xs text-muted-foreground">Reach Rate</div>
+                              </div>
+                            </>}
+                          {profile.platform === 'twitter' && <>
+                              <div className="text-center">
+                                <div className="font-bold">{profile.stats.followers.toLocaleString()}</div>
+                                <div className="text-xs text-muted-foreground">Followers</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="font-bold">{profile.stats.impressions}</div>
+                                <div className="text-xs text-muted-foreground">Impressions</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="font-bold">{profile.stats.retweetRate}</div>
+                                <div className="text-xs text-muted-foreground">Retweet Rate</div>
+                              </div>
+                            </>}
+                          {profile.platform === 'linkedin' && <>
+                              <div className="text-center">
+                                <div className="font-bold">{profile.stats.connections.toLocaleString()}</div>
+                                <div className="text-xs text-muted-foreground">Connections</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="font-bold">{profile.stats.profileViews}</div>
+                                <div className="text-xs text-muted-foreground">Profile Views</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="font-bold">{profile.stats.reactions}</div>
+                                <div className="text-xs text-muted-foreground">Reactions</div>
+                              </div>
+                            </>}
+                      </div>}
+                    </div>
+                  </CardContent>
+                  <CardFooter className="justify-between border-t pt-3 pb-3">
+                    <Button variant="outline" size="sm" className="text-xs">
+                      View Activity
+                    </Button>
+                    {profile.status === 'pending' ? <Button variant="outline" size="sm" className="text-xs bg-yellow-500/10 border-yellow-500/30 text-yellow-500 hover:text-yellow-600 hover:bg-yellow-500/20" onClick={() => verifyProfile(profile.id)}>
+                        <AlertCircle size={14} className="mr-1" /> Verify
+                      </Button> : <Button variant="outline" size="sm" className="text-xs text-red-500 hover:text-red-600 hover:bg-red-500/10" onClick={() => deleteProfile(profile.id)}>
+                        <Trash2 size={14} className="mr-1" /> Delete
+                      </Button>}
+                  </CardFooter>
+                </Card>;
+              })}
+            </div>
+          </div>
         </div>}
     </div>;
 };
