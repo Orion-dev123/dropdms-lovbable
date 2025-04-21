@@ -12,6 +12,7 @@ import { z } from "zod";
 import { Instagram, Twitter, Facebook, Linkedin, Plus, Trash2, ExternalLink, Check, Globe, AlertCircle } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 const proxyProfiles = [{
   id: '1',
   name: 'United States',
@@ -37,13 +38,16 @@ const proxyProfiles = [{
   name: 'United Kingdom',
   location: 'UK'
 }];
+
 const socialProfileSchema = z.object({
   platform: z.string().min(1, "Platform is required"),
   username: z.string().min(1, "Username is required"),
   apiKey: z.string().min(1, "API key is required"),
   proxyProfileId: z.string().min(1, "Proxy profile is required")
 });
+
 type SocialProfileFormValues = z.infer<typeof socialProfileSchema>;
+
 const socialPlatforms = [{
   id: 'instagram',
   name: 'Instagram',
@@ -61,6 +65,7 @@ const socialPlatforms = [{
   name: 'LinkedIn',
   icon: Linkedin
 }];
+
 const mockProfiles = [{
   id: '1',
   platform: 'instagram',
@@ -73,10 +78,16 @@ const mockProfiles = [{
   stats: {
     followers: 5678,
     following: 234,
-    posts: 127
+    posts: 127,
+    engagement: '3.2%',
+    reachRate: '24%',
+    avgLikes: 342
   },
   status: 'active',
-  lastUpdated: '2023-10-15T09:43:00Z'
+  lastUpdated: '2023-10-15T09:43:00Z',
+  profileUrl: 'https://instagram.com/design_masters',
+  description: 'Digital design and UI/UX inspiration',
+  category: 'Design & Creative'
 }, {
   id: '2',
   platform: 'twitter',
@@ -89,10 +100,16 @@ const mockProfiles = [{
   stats: {
     followers: 10243,
     following: 521,
-    tweets: 1503
+    tweets: 1503,
+    engagement: '2.8%',
+    impressions: '45K',
+    retweetRate: '1.2%'
   },
   status: 'active',
-  lastUpdated: '2023-09-28T14:22:00Z'
+  lastUpdated: '2023-09-28T14:22:00Z',
+  profileUrl: 'https://twitter.com/tech_updates',
+  description: 'Latest tech news and updates',
+  category: 'Technology'
 }, {
   id: '3',
   platform: 'linkedin',
@@ -104,11 +121,18 @@ const mockProfiles = [{
   proxyProfileName: 'Asia',
   stats: {
     connections: 2456,
-    posts: 78
+    posts: 78,
+    engagement: '4.1%',
+    profileViews: '892',
+    reactions: '1.2K'
   },
   status: 'pending',
-  lastUpdated: '2023-10-12T11:05:00Z'
+  lastUpdated: '2023-10-12T11:05:00Z',
+  profileUrl: 'https://linkedin.com/in/professional_network',
+  description: 'Professional networking and business insights',
+  category: 'Business'
 }];
+
 const SocialProfiles = () => {
   const [profiles, setProfiles] = useState<any[]>([]);
   const [isAddingNew, setIsAddingNew] = useState(false);
@@ -117,9 +141,11 @@ const SocialProfiles = () => {
   const {
     toast
   } = useToast();
+
   useEffect(() => {
     setProfiles(mockProfiles);
   }, []);
+
   const form = useForm<SocialProfileFormValues>({
     resolver: zodResolver(socialProfileSchema),
     defaultValues: {
@@ -129,6 +155,7 @@ const SocialProfiles = () => {
       proxyProfileId: ''
     }
   });
+
   const onSubmit = (data: SocialProfileFormValues) => {
     const platform = socialPlatforms.find(p => p.id === data.platform);
     const proxyProfile = proxyProfiles.find(p => p.id === data.proxyProfileId);
@@ -153,6 +180,7 @@ const SocialProfiles = () => {
       description: `${platform?.name} profile for @${data.username} has been successfully added.`
     });
   };
+
   const deleteProfile = (id: string) => {
     const profileToDelete = profiles.find(profile => profile.id === id);
     setProfiles(profiles.filter(profile => profile.id !== id));
@@ -162,6 +190,7 @@ const SocialProfiles = () => {
       variant: "destructive"
     });
   };
+
   const verifyProfile = (id: string) => {
     setProfiles(profiles.map(profile => profile.id === id ? {
       ...profile,
@@ -173,9 +202,11 @@ const SocialProfiles = () => {
       description: `${profileToVerify?.platformName} profile for @${profileToVerify?.username} has been verified.`
     });
   };
+
   const navigateToProxyProfile = (proxyProfileId: string) => {
     navigate(`/proxy-profiles?id=${proxyProfileId}`);
   };
+
   const generateMockStats = (platform: string) => {
     switch (platform) {
       case 'instagram':
@@ -204,6 +235,7 @@ const SocialProfiles = () => {
         return {};
     }
   };
+
   const getPlatformColor = (platform: string) => {
     switch (platform) {
       case 'instagram':
@@ -218,6 +250,7 @@ const SocialProfiles = () => {
         return 'bg-slate-500';
     }
   };
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'active':
@@ -234,7 +267,9 @@ const SocialProfiles = () => {
         return null;
     }
   };
+
   const filteredProfiles = activeTab === 'all' ? profiles : profiles.filter(profile => profile.platform === activeTab);
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat('en-US', {
@@ -243,6 +278,11 @@ const SocialProfiles = () => {
       year: 'numeric'
     }).format(date);
   };
+
+  const openProfileUrl = (url: string) => {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
   return <div className="p-6 space-y-6">
       <div className="flex flex-col space-y-4 md:flex-row md:justify-between md:items-center md:space-y-0">
         <Tabs defaultValue="all" className="w-full md:w-auto" onValueChange={setActiveTab}>
@@ -426,8 +466,31 @@ const SocialProfiles = () => {
                       <CardContent className="pb-3">
                         <div className="text-sm space-y-3">
                           <div className="flex items-center justify-between">
+                            <span className="font-medium text-muted-foreground">Profile URL:</span> 
+                            <Button 
+                              variant="link" 
+                              className="p-0 h-auto flex items-center gap-1 text-sm"
+                              onClick={() => openProfileUrl(profile.profileUrl)}
+                            >
+                              Visit Profile
+                              <ExternalLink size={12} />
+                            </Button>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="font-medium text-muted-foreground">Category:</span>
+                            <span className="text-sm">{profile.category}</span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="font-medium text-muted-foreground">Description:</span>
+                            <span className="text-sm text-right max-w-[200px] truncate">{profile.description}</span>
+                          </div>
+                          <div className="flex items-center justify-between">
                             <span className="font-medium text-muted-foreground">Proxy Profile:</span> 
-                            <Button variant="link" className="p-0 h-auto flex items-center gap-1 text-sm" onClick={() => navigateToProxyProfile(profile.proxyProfileId)}>
+                            <Button 
+                              variant="link" 
+                              className="p-0 h-auto flex items-center gap-1 text-sm" 
+                              onClick={() => navigateToProxyProfile(profile.proxyProfileId)}
+                            >
                               {profile.proxyProfileName}
                               <ExternalLink size={12} />
                             </Button>
@@ -448,12 +511,12 @@ const SocialProfiles = () => {
                                     <div className="text-xs text-muted-foreground">Followers</div>
                                   </div>
                                   <div className="text-center">
-                                    <div className="font-bold">{profile.stats.following.toLocaleString()}</div>
-                                    <div className="text-xs text-muted-foreground">Following</div>
+                                    <div className="font-bold">{profile.stats.engagement}</div>
+                                    <div className="text-xs text-muted-foreground">Engagement</div>
                                   </div>
                                   <div className="text-center">
-                                    <div className="font-bold">{profile.stats.posts.toLocaleString()}</div>
-                                    <div className="text-xs text-muted-foreground">Posts</div>
+                                    <div className="font-bold">{profile.stats.reachRate}</div>
+                                    <div className="text-xs text-muted-foreground">Reach Rate</div>
                                   </div>
                                 </>}
                               {profile.platform === 'twitter' && <>
@@ -462,26 +525,12 @@ const SocialProfiles = () => {
                                     <div className="text-xs text-muted-foreground">Followers</div>
                                   </div>
                                   <div className="text-center">
-                                    <div className="font-bold">{profile.stats.following.toLocaleString()}</div>
-                                    <div className="text-xs text-muted-foreground">Following</div>
+                                    <div className="font-bold">{profile.stats.impressions}</div>
+                                    <div className="text-xs text-muted-foreground">Impressions</div>
                                   </div>
                                   <div className="text-center">
-                                    <div className="font-bold">{profile.stats.tweets.toLocaleString()}</div>
-                                    <div className="text-xs text-muted-foreground">Tweets</div>
-                                  </div>
-                                </>}
-                              {profile.platform === 'facebook' && <>
-                                  <div className="text-center">
-                                    <div className="font-bold">{profile.stats.friends.toLocaleString()}</div>
-                                    <div className="text-xs text-muted-foreground">Friends</div>
-                                  </div>
-                                  <div className="text-center">
-                                    <div className="font-bold">{profile.stats.likes.toLocaleString()}</div>
-                                    <div className="text-xs text-muted-foreground">Likes</div>
-                                  </div>
-                                  <div className="text-center">
-                                    <div className="font-bold">-</div>
-                                    <div className="text-xs text-muted-foreground">-</div>
+                                    <div className="font-bold">{profile.stats.retweetRate}</div>
+                                    <div className="text-xs text-muted-foreground">Retweet Rate</div>
                                   </div>
                                 </>}
                               {profile.platform === 'linkedin' && <>
@@ -490,12 +539,12 @@ const SocialProfiles = () => {
                                     <div className="text-xs text-muted-foreground">Connections</div>
                                   </div>
                                   <div className="text-center">
-                                    <div className="font-bold">{profile.stats.posts.toLocaleString()}</div>
-                                    <div className="text-xs text-muted-foreground">Posts</div>
+                                    <div className="font-bold">{profile.stats.profileViews}</div>
+                                    <div className="text-xs text-muted-foreground">Profile Views</div>
                                   </div>
                                   <div className="text-center">
-                                    <div className="font-bold">-</div>
-                                    <div className="text-xs text-muted-foreground">-</div>
+                                    <div className="font-bold">{profile.stats.reactions}</div>
+                                    <div className="text-xs text-muted-foreground">Reactions</div>
                                   </div>
                                 </>}
                             </div>}
@@ -519,4 +568,5 @@ const SocialProfiles = () => {
         </div>}
     </div>;
 };
+
 export default SocialProfiles;
