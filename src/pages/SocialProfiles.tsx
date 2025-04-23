@@ -5,8 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { layoutGrid, layoutList } from 'lucide-react/icons';
-import { Instagram, Twitter, Facebook, Linkedin, Check, Trash2, AlertCircle, Plus } from 'lucide-react';
+import { LayoutGrid, LayoutList, Instagram, Twitter, Facebook, Linkedin, Check, Trash2, AlertCircle, Plus } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const socialPlatforms = [{
@@ -98,7 +97,7 @@ const SocialProfiles = () => {
             aria-label="Card View"
             onClick={() => setViewType('cards')}
           >
-            <layoutGrid size={20} />
+            <LayoutGrid size={20} />
           </Button>
           <Button
             variant={viewType === 'table' ? "default" : "outline"}
@@ -106,7 +105,7 @@ const SocialProfiles = () => {
             aria-label="Table View"
             onClick={() => setViewType('table')}
           >
-            <layoutList size={20} />
+            <LayoutList size={20} />
           </Button>
         </div>
       </div>
@@ -180,4 +179,3 @@ const SocialProfiles = () => {
 };
 
 export default SocialProfiles;
-
