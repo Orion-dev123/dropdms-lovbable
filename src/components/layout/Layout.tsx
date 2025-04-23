@@ -18,8 +18,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       {/* Container for Navbar and Main content, takes remaining space, handles vertical flex, AND adds left margin for Sidebar */}
       <div className="flex-1 flex flex-col overflow-hidden ml-[65px]"> 
         <Navbar location={location} /> 
-        {/* Main content area grows (flex-1) and handles its own vertical scrolling */}
-        <main className="flex-1 overflow-y-auto"> 
+        {/* Main content area grows (flex-1), handles its own vertical scrolling, AND adds top padding for Navbar */}
+        <main className="flex-1 overflow-y-auto pt-16"> 
           {children}
         </main>
       </div>
