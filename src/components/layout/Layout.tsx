@@ -10,15 +10,19 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
-  const isInboxPage = location.pathname === '/automation';
   
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <Sidebar />
-      <Navbar location={location} />
-      <main className={`ml-[65px] pt-16 ${isInboxPage ? 'h-[calc(100vh-64px)]' : 'min-h-[calc(100vh-64px)]'} overflow-hidden`}>
-        {children}
-      </main>
+    // Main container is flex row, full height, prevents its own overflow
+    <div className="h-screen bg-background text-foreground flex overflow-hidden"> 
+      <Sidebar /> 
+      {/* Container for Navbar and Main content, takes remaining space and handles vertical flex */}
+      <div className="flex-1 flex flex-col overflow-hidden"> 
+        <Navbar location={location} /> 
+        {/* Main content area grows (flex-1) and handles its own vertical scrolling */}
+        <main className="flex-1 overflow-y-auto"> 
+          {children}
+        </main>
+      </div>
     </div>
   );
 };
