@@ -89,11 +89,6 @@ const Campaigns = () => {
   
   return (
     <div className="p-6 animate-fade-in">
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold">Campaigns</h1>
-        <p className="text-muted-foreground text-base">Manage your marketing campaigns</p>
-      </div>
-      
       {/* Kanban Board View */}
       <KanbanBoard campaigns={filteredCampaigns} />
       
