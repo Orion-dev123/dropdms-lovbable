@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { edit, Calendar, Clock, User } from 'lucide-react';
+import { Edit, Calendar, Clock, User } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
@@ -68,7 +68,7 @@ const formatDate = (dateString: string) => {
 const CampaignCard = ({ campaign }: { campaign: Campaign }) => {
   return (
     <div 
-      className="bg-zinc-800/80 rounded-lg p-4 cursor-grab hover:bg-zinc-700/80 transition-all duration-200 group border border-zinc-700/50 hover:border-zinc-600/50"
+      className="bg-zinc-800/50 rounded-lg p-4 cursor-grab hover:bg-zinc-700/50 transition-all duration-200 group border border-zinc-700/30 hover:border-zinc-600/30"
       draggable
       style={{
         display: 'flex',
@@ -122,7 +122,7 @@ const CampaignCard = ({ campaign }: { campaign: Campaign }) => {
             <span>Progress</span>
             <span>{campaign.progress}%</span>
           </div>
-          <div className="w-full h-1.5 bg-zinc-700/80 rounded-full overflow-hidden">
+          <div className="w-full h-1.5 bg-zinc-700/50 rounded-full overflow-hidden">
             <div 
               className="h-full bg-zinc-300 rounded-full transition-all duration-500" 
               style={{ width: `${campaign.progress}%` }}
@@ -133,7 +133,7 @@ const CampaignCard = ({ campaign }: { campaign: Campaign }) => {
       
       {/* Interactive Elements */}
       <button className="mt-2 text-xs text-zinc-400 hover:text-zinc-300 flex items-center opacity-0 group-hover:opacity-100 transition-opacity self-start">
-        <edit size={10} className="mr-1.5" />
+        <Edit size={10} className="mr-1.5" />
         Edit
       </button>
     </div>
