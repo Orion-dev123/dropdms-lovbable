@@ -42,15 +42,15 @@ export const getStatusColor = (status: CampaignStatus) => {
 export const getColumnColor = (status: CampaignStatus) => {
   switch (status) {
     case 'Scheduled':
-      return 'bg-zinc-900/60';
+      return 'bg-[#1c1c1c]';
     case 'Ongoing':
-      return 'bg-zinc-800/60';
+      return 'bg-[#1c1c1c]';
     case 'Paused':
-      return 'bg-zinc-700/60';
+      return 'bg-[#1c1c1c]';
     case 'Completed':
-      return 'bg-zinc-600/60';
+      return 'bg-[#1c1c1c]';
     default:
-      return 'bg-zinc-900';
+      return 'bg-[#1c1c1c]';
   }
 };
 
@@ -68,7 +68,7 @@ const formatDate = (dateString: string) => {
 const CampaignCard = ({ campaign }: { campaign: Campaign }) => {
   return (
     <div 
-      className="bg-zinc-800/50 rounded-lg p-4 cursor-grab hover:bg-zinc-700/50 transition-all duration-200 group border border-zinc-700/30 hover:border-zinc-600/30"
+      className="bg-[#282828] rounded-lg p-5 cursor-grab hover:border-[#555] transition-all duration-200 group border border-[#3a3a3a]"
       draggable
       style={{
         display: 'flex',
@@ -78,27 +78,27 @@ const CampaignCard = ({ campaign }: { campaign: Campaign }) => {
     >
       {/* Header Section */}
       <div className="flex justify-between items-start">
-        <h4 className="font-semibold text-zinc-100 text-sm leading-tight flex-1 pr-2">{campaign.name}</h4>
+        <h4 className="font-semibold text-[#e0e0e0] text-lg leading-tight flex-1 pr-2">{campaign.name}</h4>
         <Badge className={cn("text-xs px-2 py-0.5 flex-shrink-0", getStatusColor(campaign.status))}>
           {campaign.status}
         </Badge>
       </div>
       
       {/* Platform Information */}
-      <p className="text-xs text-zinc-400 font-medium">
+      <p className="text-sm text-[#a0a0a0] font-medium">
         {campaign.platform}
       </p>
       
       {/* Schedule Details */}
-      <div className="space-y-1.5">
-        <div className="flex items-center text-xs text-zinc-400">
-          <Calendar size={12} className="mr-2 flex-shrink-0" />
+      <div className="space-y-2">
+        <div className="flex items-center text-sm text-[#a0a0a0]">
+          <Calendar size={16} className="mr-2 flex-shrink-0" />
           <span>{formatDate(campaign.date)}</span>
         </div>
         
         {(campaign.startTime || campaign.endTime) && (
-          <div className="flex items-center text-xs text-zinc-400">
-            <Clock size={12} className="mr-2 flex-shrink-0" />
+          <div className="flex items-center text-sm text-[#a0a0a0]">
+            <Clock size={16} className="mr-2 flex-shrink-0" />
             <span>
               {campaign.startTime || "--"} 
               {campaign.endTime && campaign.startTime && " - "} 
@@ -108,8 +108,8 @@ const CampaignCard = ({ campaign }: { campaign: Campaign }) => {
         )}
         
         {campaign.owner && (
-          <div className="flex items-center text-xs text-zinc-400">
-            <User size={12} className="mr-2 flex-shrink-0" />
+          <div className="flex items-center text-sm text-[#a0a0a0]">
+            <User size={16} className="mr-2 flex-shrink-0" />
             <span>{campaign.owner}</span>
           </div>
         )}
@@ -118,13 +118,13 @@ const CampaignCard = ({ campaign }: { campaign: Campaign }) => {
       {/* Performance Metrics (for non-scheduled campaigns) */}
       {campaign.status !== 'Scheduled' && (
         <div className="mt-2">
-          <div className="flex justify-between text-xs text-zinc-500 mb-2">
+          <div className="flex justify-between text-xs text-[#a0a0a0] mb-1">
             <span>Progress</span>
             <span>{campaign.progress}%</span>
           </div>
-          <div className="w-full h-1.5 bg-zinc-700/50 rounded-full overflow-hidden">
+          <div className="w-full h-1.5 bg-[#3f3f3f] rounded-sm overflow-hidden">
             <div 
-              className="h-full bg-zinc-300 rounded-full transition-all duration-500" 
+              className="h-full bg-[#e0e0e0] rounded-sm transition-all duration-300" 
               style={{ width: `${campaign.progress}%` }}
             />
           </div>
@@ -132,7 +132,7 @@ const CampaignCard = ({ campaign }: { campaign: Campaign }) => {
       )}
       
       {/* Interactive Elements */}
-      <button className="mt-2 text-xs text-zinc-400 hover:text-zinc-300 flex items-center opacity-0 group-hover:opacity-100 transition-opacity self-start">
+      <button className="mt-2 text-xs text-[#a0a0a0] hover:text-[#e0e0e0] flex items-center opacity-0 group-hover:opacity-100 transition-opacity self-start">
         <Edit size={10} className="mr-1.5" />
         Edit
       </button>
@@ -147,22 +147,22 @@ const KanbanColumn = ({ status, campaigns }: { status: CampaignStatus; campaigns
       className={cn("rounded-lg p-4 min-w-80 max-w-80", getColumnColor(status))}
       style={{
         flex: '1',
-        border: '1px solid rgba(58, 58, 58, 0.8)',
+        border: '1px solid #3a3a3a',
         display: 'flex',
         flexDirection: 'column'
       }}
     >
       {/* Column Header */}
       <div className="flex justify-between items-center mb-6">
-        <h3 className="flex items-center gap-2 font-medium text-sm text-zinc-300">
+        <h3 className="flex items-center gap-2 font-medium text-sm text-[#a0a0a0]">
           <span>{status}</span>
           <span 
-            className="bg-zinc-700/60 text-zinc-400 text-xs font-semibold px-2 py-0.5 rounded"
+            className="bg-[#3a3a3a] text-[#a0a0a0] text-xs font-semibold px-2 py-1 rounded"
           >
             {campaigns.length}
           </span>
         </h3>
-        <button className="text-zinc-400 hover:text-zinc-300 text-lg leading-none">
+        <button className="text-[#a0a0a0] hover:text-[#e0e0e0] text-lg leading-none">
           …
         </button>
       </div>
@@ -183,7 +183,7 @@ const KanbanColumn = ({ status, campaigns }: { status: CampaignStatus; campaigns
       
       {/* Add Card Button */}
       <button 
-        className="w-full mt-4 p-3 bg-transparent border border-zinc-700/60 rounded-lg text-zinc-400 font-medium cursor-pointer flex items-center justify-center gap-2 transition-all duration-200 hover:bg-zinc-800/60 hover:border-zinc-600/60 text-sm"
+        className="w-full mt-4 p-3 bg-transparent border border-[#3a3a3a] rounded-lg text-[#a0a0a0] font-medium cursor-pointer flex items-center justify-center gap-2 transition-all duration-200 hover:bg-[#282828] hover:border-[#555] text-sm"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
           <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
