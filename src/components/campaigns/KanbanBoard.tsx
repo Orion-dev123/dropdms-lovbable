@@ -25,31 +25,15 @@ export type Campaign = {
 export const getStatusColor = (status: CampaignStatus) => {
   switch (status) {
     case 'Scheduled':
-      return 'bg-emerald-900/20 text-emerald-400 border-emerald-700/30';
+      return 'bg-blue-500/10 text-blue-500 border-blue-500/20';
     case 'Ongoing':
-      return 'bg-amber-900/20 text-amber-400 border-amber-700/30';
+      return 'bg-yellow/10 text-yellow border-yellow/20';
     case 'Paused':
-      return 'bg-orange-900/20 text-orange-400 border-orange-700/30';
+      return 'bg-orange-500/10 text-orange-500 border-orange-500/20';
     case 'Completed':
-      return 'bg-violet-900/20 text-violet-400 border-violet-700/30';
+      return 'bg-green-500/10 text-green-500 border-green-500/20';
     default:
-      return 'text-zinc-400';
-  }
-};
-
-// Column color helpers
-export const getColumnColor = (status: CampaignStatus) => {
-  switch (status) {
-    case 'Scheduled':
-      return 'bg-[#1c1c1c]';
-    case 'Ongoing':
-      return 'bg-[#1c1c1c]';
-    case 'Paused':
-      return 'bg-[#1c1c1c]';
-    case 'Completed':
-      return 'bg-[#1c1c1c]';
-    default:
-      return 'bg-[#1c1c1c]';
+      return 'text-muted-foreground';
   }
 };
 
@@ -67,37 +51,32 @@ const formatDate = (dateString: string) => {
 const CampaignCard = ({ campaign }: { campaign: Campaign }) => {
   return (
     <div 
-      className="bg-black rounded-lg p-5 cursor-grab hover:border-zinc-700 transition-all duration-200 group border border-zinc-800"
+      className="bg-card border border-border rounded-lg p-4 cursor-grab hover:border-border/80 transition-all duration-200 group shadow-sm"
       draggable
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '0.75rem'
-      }}
     >
       {/* Header Section */}
-      <div className="flex justify-between items-start">
-        <h4 className="font-semibold text-white text-lg leading-tight flex-1 pr-2">{campaign.name}</h4>
-        <Badge className={cn("text-xs px-2 py-0.5 flex-shrink-0", getStatusColor(campaign.status))}>
+      <div className="flex justify-between items-start gap-3 mb-3">
+        <h4 className="font-semibold text-card-foreground text-sm leading-tight flex-1">{campaign.name}</h4>
+        <Badge className={cn("text-xs px-2 py-0.5 flex-shrink-0 font-medium", getStatusColor(campaign.status))}>
           {campaign.status}
         </Badge>
       </div>
       
       {/* Platform Information */}
-      <p className="text-sm text-zinc-400 font-medium">
+      <p className="text-sm text-muted-foreground font-medium mb-3">
         {campaign.platform}
       </p>
       
       {/* Schedule Details */}
-      <div className="space-y-2">
-        <div className="flex items-center text-sm text-zinc-400">
-          <Calendar size={16} className="mr-2 flex-shrink-0" />
+      <div className="space-y-2 mb-3">
+        <div className="flex items-center text-xs text-muted-foreground">
+          <Calendar size={14} className="mr-2 flex-shrink-0" />
           <span>{formatDate(campaign.date)}</span>
         </div>
         
         {(campaign.startTime || campaign.endTime) && (
-          <div className="flex items-center text-sm text-zinc-400">
-            <Clock size={16} className="mr-2 flex-shrink-0" />
+          <div className="flex items-center text-xs text-muted-foreground">
+            <Clock size={14} className="mr-2 flex-shrink-0" />
             <span>
               {campaign.startTime || "--"} 
               {campaign.endTime && campaign.startTime && " - "} 
@@ -107,8 +86,8 @@ const CampaignCard = ({ campaign }: { campaign: Campaign }) => {
         )}
         
         {campaign.owner && (
-          <div className="flex items-center text-sm text-zinc-400">
-            <User size={16} className="mr-2 flex-shrink-0" />
+          <div className="flex items-center text-xs text-muted-foreground">
+            <User size={14} className="mr-2 flex-shrink-0" />
             <span>{campaign.owner}</span>
           </div>
         )}
@@ -116,24 +95,28 @@ const CampaignCard = ({ campaign }: { campaign: Campaign }) => {
       
       {/* Performance Metrics (for non-scheduled campaigns) */}
       {campaign.status !== 'Scheduled' && (
-        <div className="mt-2">
-          <div className="flex justify-between text-xs text-zinc-400 mb-1">
+        <div className="mt-3 pt-3 border-t border-border">
+          <div className="flex justify-between text-xs text-muted-foreground mb-2">
             <span>Progress</span>
             <span>{campaign.progress}%</span>
           </div>
-          <div className="w-full h-1.5 bg-zinc-900 rounded-sm overflow-hidden">
+          <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
             <div 
-              className="h-full bg-white rounded-sm transition-all duration-300" 
+              className="h-full bg-primary rounded-full transition-all duration-300" 
               style={{ width: `${campaign.progress}%` }}
             />
+          </div>
+          <div className="flex justify-between text-xs text-muted-foreground mt-2">
+            <span>{campaign.messagesDelivered}/{campaign.leads} sent</span>
+            <span>{campaign.leads} leads</span>
           </div>
         </div>
       )}
       
       {/* Interactive Elements */}
-      <button className="mt-2 text-xs text-zinc-500 hover:text-white flex items-center opacity-0 group-hover:opacity-100 transition-opacity self-start">
-        <Edit size={10} className="mr-1.5" />
-        Edit
+      <button className="mt-3 text-xs text-muted-foreground hover:text-foreground flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
+        <Edit size={12} className="mr-1.5" />
+        Edit Campaign
       </button>
     </div>
   );
@@ -142,51 +125,41 @@ const CampaignCard = ({ campaign }: { campaign: Campaign }) => {
 // KanbanColumn component
 const KanbanColumn = ({ status, campaigns }: { status: CampaignStatus; campaigns: Campaign[] }) => {
   return (
-    <div 
-      className="bg-zinc-950 rounded-lg p-4 min-w-80 max-w-80 border border-zinc-800"
-      style={{
-        flex: '1',
-        display: 'flex',
-        flexDirection: 'column'
-      }}
-    >
+    <div className="bg-secondary/30 border border-border rounded-lg p-4 min-w-[320px] flex-shrink-0 flex flex-col h-fit">
       {/* Column Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="flex items-center gap-2 font-medium text-sm text-zinc-400">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="flex items-center gap-2 font-semibold text-sm text-foreground">
           <span>{status}</span>
-          <span 
-            className="bg-zinc-800 text-zinc-400 text-xs font-semibold px-2 py-1 rounded"
-          >
+          <Badge variant="secondary" className="text-xs font-medium">
             {campaigns.length}
-          </span>
+          </Badge>
         </h3>
-        <button className="text-zinc-400 hover:text-white text-lg leading-none">
-          …
+        <button className="text-muted-foreground hover:text-foreground p-1 rounded-md hover:bg-muted transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+          </svg>
         </button>
       </div>
       
       {/* Cards Container */}
-      <div 
-        className="flex-grow min-h-24 transition-colors duration-200"
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '1rem'
-        }}
-      >
-        {campaigns.map(campaign => (
-          <CampaignCard key={campaign.id} campaign={campaign} />
-        ))}
+      <div className="flex-1 space-y-3 min-h-[100px]">
+        {campaigns.length === 0 ? (
+          <div className="flex items-center justify-center h-24 text-muted-foreground text-sm border-2 border-dashed border-border rounded-lg">
+            No campaigns
+          </div>
+        ) : (
+          campaigns.map(campaign => (
+            <CampaignCard key={campaign.id} campaign={campaign} />
+          ))
+        )}
       </div>
       
       {/* Add Card Button */}
-      <button 
-        className="w-full mt-4 p-3 bg-transparent border border-zinc-800 hover:border-zinc-700 rounded-lg text-zinc-400 hover:text-white font-medium cursor-pointer flex items-center justify-center gap-2 transition-all duration-200 hover:bg-zinc-900 text-sm"
-      >
+      <button className="w-full mt-4 p-3 bg-transparent border border-dashed border-border hover:border-muted-foreground rounded-lg text-muted-foreground hover:text-foreground font-medium cursor-pointer flex items-center justify-center gap-2 transition-all duration-200 hover:bg-muted/50 text-sm">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
           <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
         </svg>
-        Add new campaign
+        Add Campaign
       </button>
     </div>
   );
@@ -209,19 +182,28 @@ const KanbanBoard = ({ campaigns }: { campaigns: Campaign[] }) => {
   });
   
   return (
-    <div 
-      className="flex gap-6 w-full overflow-x-auto pb-4"
-      style={{
-        minHeight: '600px'
-      }}
-    >
-      {Object.entries(campaignsByStatus).map(([status, statusCampaigns]) => (
-        <KanbanColumn 
-          key={status} 
-          status={status as CampaignStatus} 
-          campaigns={statusCampaigns} 
-        />
-      ))}
+    <div className="w-full">
+      {/* Mobile: Stack columns vertically */}
+      <div className="block lg:hidden space-y-6">
+        {Object.entries(campaignsByStatus).map(([status, statusCampaigns]) => (
+          <KanbanColumn 
+            key={status} 
+            status={status as CampaignStatus} 
+            campaigns={statusCampaigns} 
+          />
+        ))}
+      </div>
+      
+      {/* Desktop: Horizontal layout */}
+      <div className="hidden lg:flex gap-6 w-full overflow-x-auto pb-4 min-h-[600px]">
+        {Object.entries(campaignsByStatus).map(([status, statusCampaigns]) => (
+          <KanbanColumn 
+            key={status} 
+            status={status as CampaignStatus} 
+            campaigns={statusCampaigns} 
+          />
+        ))}
+      </div>
     </div>
   );
 };
