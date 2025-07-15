@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Search, Plus, ChevronRight, Chrome, Monitor, Shield, Server } from 'lucide-react';
+import { Search, Plus, ChevronRight, Chrome, Monitor, Shield, Server, Settings, Eye, Network } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ProxyDetails from '@/components/proxy/ProxyDetails';
 import NewProxyForm from '@/components/proxy/NewProxyForm';
 import {
@@ -115,29 +116,49 @@ const sampleProxies = [
 const ProxyProfiles = () => {
   const [selectedProxy, setSelectedProxy] = useState(sampleProxies[0]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const filteredProxies = sampleProxies.filter(proxy => 
-    proxy.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    proxy.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    proxy.type.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredProxies = sampleProxies.filter(proxy => {
+    const matchesSearch = proxy.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      proxy.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      proxy.type.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesStatus = statusFilter === 'all' || 
+      (statusFilter === 'active' && proxy.active) ||
+      (statusFilter === 'inactive' && !proxy.active);
+    
+    return matchesSearch && matchesStatus;
+  });
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex items-center space-x-4">
-        <div className="relative flex-grow">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search profiles by name, location or type..."
-            className="pl-10"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-4 flex-1 max-w-2xl">
+          <div className="relative w-80">
+            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search profiles..."
+              className="pl-10"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="Filter status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="active">Active</SelectItem>
+              <SelectItem value="inactive">Inactive</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
+        
         <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-yellow text-yellow-foreground hover:bg-yellow/90 flex-shrink-0">
+            <Button className="bg-yellow text-yellow-foreground hover:bg-yellow/90">
               <Plus className="mr-2 h-4 w-4" /> New Profile
             </Button>
           </DialogTrigger>
@@ -189,6 +210,17 @@ const ProxyProfiles = () => {
                 </div>
               </div>
               <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-1">
+                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                    <Eye size={14} />
+                  </Button>
+                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                    <Settings size={14} />
+                  </Button>
+                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                    <Network size={14} />
+                  </Button>
+                </div>
                 <span className={`inline-flex h-2 w-2 rounded-full ${proxy.active ? 'bg-green-500' : 'bg-red-500'}`} />
                 <ChevronRight size={18} className="text-muted-foreground" />
               </div>
