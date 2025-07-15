@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Search, Plus, ChevronRight, Chrome, Monitor, Shield, Server } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import ProxyDetails from '@/components/proxy/ProxyDetails';
 import PerformanceMetrics from '@/components/proxy/PerformanceMetrics';
 import NewProxyForm from '@/components/proxy/NewProxyForm';
@@ -154,56 +155,61 @@ const ProxyProfiles = () => {
         </Dialog>
       </div>
 
+      <Separator />
+
       <div className="flex gap-6">
         <div className="w-2/3 space-y-4">
-          <div className="space-y-2">
-            {filteredProxies.map((proxy) => (
-              <div 
-                key={proxy.id}
-                className={`
-                  p-4 rounded-lg border border-border bg-card hover:bg-card/80 cursor-pointer
-                  transition-all duration-200 relative overflow-hidden
-                  ${selectedProxy.id === proxy.id ? 'ring-1 ring-gray-500 bg-gray-100/10 dark:bg-gray-800/30' : ''}
-                `}
-                onClick={() => setSelectedProxy(proxy)}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
+          <div className="space-y-4">
+            {filteredProxies.map((proxy, index) => (
+              <React.Fragment key={proxy.id}>
+                <div 
+                  className={`
+                    p-4 rounded-lg border border-border bg-card hover:bg-card/80 cursor-pointer
+                    transition-all duration-200 relative overflow-hidden
+                    ${selectedProxy.id === proxy.id ? 'ring-1 ring-gray-500 bg-gray-100/10 dark:bg-gray-800/30' : ''}
+                  `}
+                  onClick={() => setSelectedProxy(proxy)}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-2">
+                        <h3 className="font-medium">{proxy.name}</h3>
+                        <span className={`text-xs px-2 py-0.5 rounded-full ${proxyTypes[proxy.type]}`}>
+                          {proxy.type}
+                        </span>
+                        <span className="text-xs text-muted-foreground">{proxy.location}</span>
+                      </div>
+                      <div className="flex items-center mt-2 text-xs text-muted-foreground space-x-3">
+                        <span className="flex items-center space-x-1">
+                          <Shield size={14} />
+                          <span>{proxy.os}</span>
+                        </span>
+                        <span className="flex items-center space-x-1">
+                          {getBrowserIcon(proxy.browser)}
+                          <span>{proxy.browser} {proxy.version}</span>
+                        </span>
+                        <span className="flex items-center space-x-1">
+                          <Server size={14} />
+                          <span>{proxy.ipAddress}:{proxy.port}</span>
+                        </span>
+                      </div>
+                    </div>
                     <div className="flex items-center space-x-2">
-                      <h3 className="font-medium">{proxy.name}</h3>
-                      <span className={`text-xs px-2 py-0.5 rounded-full ${proxyTypes[proxy.type]}`}>
-                        {proxy.type}
-                      </span>
-                      <span className="text-xs text-muted-foreground">{proxy.location}</span>
-                    </div>
-                    <div className="flex items-center mt-2 text-xs text-muted-foreground space-x-3">
-                      <span className="flex items-center space-x-1">
-                        <Shield size={14} />
-                        <span>{proxy.os}</span>
-                      </span>
-                      <span className="flex items-center space-x-1">
-                        {getBrowserIcon(proxy.browser)}
-                        <span>{proxy.browser} {proxy.version}</span>
-                      </span>
-                      <span className="flex items-center space-x-1">
-                        <Server size={14} />
-                        <span>{proxy.ipAddress}:{proxy.port}</span>
-                      </span>
+                      <span className={`inline-flex h-2 w-2 rounded-full ${proxy.active ? 'bg-green-500' : 'bg-red-500'}`} />
+                      <ChevronRight size={18} className="text-muted-foreground" />
                     </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <span className={`inline-flex h-2 w-2 rounded-full ${proxy.active ? 'bg-green-500' : 'bg-red-500'}`} />
-                    <ChevronRight size={18} className="text-muted-foreground" />
-                  </div>
+                  <div className={`absolute h-full w-1 left-0 top-0 ${proxy.active ? 'bg-green-500' : 'bg-red-500'}`} />
                 </div>
-                <div className={`absolute h-full w-1 left-0 top-0 ${proxy.active ? 'bg-green-500' : 'bg-red-500'}`} />
-              </div>
+                {index < filteredProxies.length - 1 && <Separator />}
+              </React.Fragment>
             ))}
           </div>
         </div>
 
         <div className="w-1/3 space-y-6">
           <PerformanceMetrics proxy={selectedProxy} />
+          <Separator />
           <ProxyDetails proxy={selectedProxy} />
         </div>
       </div>
