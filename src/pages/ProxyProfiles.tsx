@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Search, Plus, ChevronRight, Chrome, Monitor, Shield, Server } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -155,18 +155,18 @@ const ProxyProfiles = () => {
         </Dialog>
       </div>
 
-      <Separator />
-
-      <div className="flex gap-6">
-        <div className="w-2/3 space-y-4">
-          <div className="space-y-4">
-            {filteredProxies.map((proxy, index) => (
-              <React.Fragment key={proxy.id}>
+      <div className="border-t border-border/50 pt-6">
+        <div className="flex gap-6">
+          <div className="w-2/3 space-y-4">
+            <div className="space-y-0 divide-y divide-border/30">
+              {filteredProxies.map((proxy) => (
                 <div 
+                  key={proxy.id}
                   className={`
-                    p-4 rounded-lg border border-border bg-card hover:bg-card/80 cursor-pointer
-                    transition-all duration-200 relative overflow-hidden
-                    ${selectedProxy.id === proxy.id ? 'ring-1 ring-gray-500 bg-gray-100/10 dark:bg-gray-800/30' : ''}
+                    p-4 hover:bg-card/80 cursor-pointer first:rounded-t-lg last:rounded-b-lg
+                    transition-all duration-200 relative overflow-hidden border-l-4
+                    ${selectedProxy.id === proxy.id ? 'bg-card/60 border-l-primary' : 'border-l-transparent'}
+                    ${proxy.active ? 'border-l-green-500' : 'border-l-red-500'}
                   `}
                   onClick={() => setSelectedProxy(proxy)}
                 >
@@ -199,18 +199,21 @@ const ProxyProfiles = () => {
                       <ChevronRight size={18} className="text-muted-foreground" />
                     </div>
                   </div>
-                  <div className={`absolute h-full w-1 left-0 top-0 ${proxy.active ? 'bg-green-500' : 'bg-red-500'}`} />
                 </div>
-                {index < filteredProxies.length - 1 && <Separator />}
-              </React.Fragment>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
 
-        <div className="w-1/3 space-y-6">
-          <PerformanceMetrics proxy={selectedProxy} />
-          <Separator />
-          <ProxyDetails proxy={selectedProxy} />
+          <div className="w-1/3 space-y-0">
+            <div className="border border-border/30 rounded-lg overflow-hidden">
+              <div className="p-4 border-b border-border/30">
+                <PerformanceMetrics proxy={selectedProxy} />
+              </div>
+              <div className="p-4">
+                <ProxyDetails proxy={selectedProxy} />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
