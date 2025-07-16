@@ -118,6 +118,8 @@ const ProxyProfiles = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [viewConfigProxy, setViewConfigProxy] = useState(null);
+  const [editConfigProxy, setEditConfigProxy] = useState(null);
 
   const filteredProxies = sampleProxies.filter(proxy => {
     const matchesSearch = proxy.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -211,10 +213,26 @@ const ProxyProfiles = () => {
               </div>
               <div className="flex items-center space-x-2">
                 <div className="flex items-center space-x-1">
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-8 w-8 p-0"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setViewConfigProxy(proxy);
+                    }}
+                  >
                     <Eye size={14} />
                   </Button>
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-8 w-8 p-0"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEditConfigProxy(proxy);
+                    }}
+                  >
                     <Settings size={14} />
                   </Button>
                   <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
@@ -229,6 +247,89 @@ const ProxyProfiles = () => {
           </div>
         ))}
       </div>
+
+      {/* View Configuration Dialog */}
+      <Dialog open={!!viewConfigProxy} onOpenChange={() => setViewConfigProxy(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Proxy Configuration - {viewConfigProxy?.name}</DialogTitle>
+            <DialogDescription>
+              Current configuration details for this proxy profile.
+            </DialogDescription>
+          </DialogHeader>
+          {viewConfigProxy && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium">Profile Name</label>
+                  <p className="text-sm text-muted-foreground">{viewConfigProxy.name}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium">Status</label>
+                  <p className={`text-sm ${viewConfigProxy.active ? 'text-green-600' : 'text-red-600'}`}>
+                    {viewConfigProxy.active ? 'Active' : 'Inactive'}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium">Proxy Type</label>
+                  <p className="text-sm text-muted-foreground">{viewConfigProxy.type}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium">Location</label>
+                  <p className="text-sm text-muted-foreground">{viewConfigProxy.location}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium">IP Address</label>
+                  <p className="text-sm text-muted-foreground">{viewConfigProxy.ipAddress}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium">Port</label>
+                  <p className="text-sm text-muted-foreground">{viewConfigProxy.port}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium">Operating System</label>
+                  <p className="text-sm text-muted-foreground">{viewConfigProxy.os}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium">Browser</label>
+                  <p className="text-sm text-muted-foreground">{viewConfigProxy.browser} {viewConfigProxy.version}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium">Response Time</label>
+                  <p className="text-sm text-muted-foreground">{viewConfigProxy.responseTime}ms</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium">Uptime</label>
+                  <p className="text-sm text-muted-foreground">{viewConfigProxy.uptime}%</p>
+                </div>
+              </div>
+              <div>
+                <label className="text-sm font-medium">Last Used</label>
+                <p className="text-sm text-muted-foreground">
+                  {new Date(viewConfigProxy.lastUsed).toLocaleString()}
+                </p>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Configuration Dialog */}
+      <Dialog open={!!editConfigProxy} onOpenChange={() => setEditConfigProxy(null)}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>Edit Proxy Configuration - {editConfigProxy?.name}</DialogTitle>
+            <DialogDescription>
+              Modify the configuration settings for this proxy profile.
+            </DialogDescription>
+          </DialogHeader>
+          {editConfigProxy && (
+            <NewProxyForm 
+              onClose={() => setEditConfigProxy(null)} 
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
