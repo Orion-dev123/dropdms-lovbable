@@ -209,7 +209,7 @@ const SocialProfiles = () => {
               {filteredProfiles.map(profile => {
                 const PlatformIcon = profile.icon;
                 return (
-                  <Card key={profile.id} className="group relative overflow-hidden glass-morphism hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] border-white/10">
+                  <Card key={profile.id} className="group relative overflow-hidden backdrop-blur-xl bg-black/40 border border-white/10 shadow-[0_8px_32px_-8px_rgba(0,0,0,0.6)] hover:shadow-[0_16px_48px_-12px_rgba(0,0,0,0.8)] transition-all duration-500 hover:scale-[1.02] hover:bg-black/50">
                     <div className="absolute inset-0 bg-gradient-to-br from-yellow/5 via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     
                     <CardHeader className="relative z-10 pb-4">
@@ -277,7 +277,7 @@ const SocialProfiles = () => {
               </div>
             ) : (
               mockProxyProfiles.map(proxy => (
-                <Card key={proxy.id} className="group relative overflow-hidden glass-morphism hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] border-white/10">
+                <Card key={proxy.id} className="group relative overflow-hidden backdrop-blur-xl bg-black/40 border border-white/10 shadow-[0_8px_32px_-8px_rgba(0,0,0,0.6)] hover:shadow-[0_16px_48px_-12px_rgba(0,0,0,0.8)] transition-all duration-500 hover:scale-[1.02] hover:bg-black/50">
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   
                   <CardHeader className="relative z-10 pb-4">
@@ -334,7 +334,7 @@ const SocialProfiles = () => {
 
       {/* Enhanced New Account Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-lg glass-morphism border-white/20">
+        <DialogContent className="sm:max-w-lg backdrop-blur-xl bg-black/60 border border-white/20 shadow-[0_16px_48px_-12px_rgba(0,0,0,0.8)]">
           <DialogHeader className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-xl bg-yellow/20 border border-yellow/30">
@@ -356,14 +356,14 @@ const SocialProfiles = () => {
                 placeholder="Enter a memorable name for this account"
                 value={newAccount.name}
                 onChange={e => setNewAccount(n => ({ ...n, name: e.target.value }))}
-                className="bg-muted/30 border-white/20 focus:border-yellow/50 transition-colors"
+                className="bg-black/40 border-white/20 focus:border-yellow/50 transition-colors"
               />
             </div>
             
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground">Platform</label>
               <select
-                className="w-full bg-muted/30 border border-white/20 rounded-md px-3 py-2.5 text-foreground focus:border-yellow/50 focus:outline-none transition-colors"
+                className="w-full bg-black/40 border border-white/20 rounded-md px-3 py-2.5 text-foreground focus:border-yellow/50 focus:outline-none transition-colors"
                 value={newAccount.platform}
                 onChange={e => setNewAccount(n => ({ ...n, platform: e.target.value }))}
               >
@@ -381,14 +381,14 @@ const SocialProfiles = () => {
                 type="password"
                 value={newAccount.apiKey}
                 onChange={e => setNewAccount(n => ({ ...n, apiKey: e.target.value }))}
-                className="bg-muted/30 border-white/20 focus:border-yellow/50 transition-colors"
+                className="bg-black/40 border-white/20 focus:border-yellow/50 transition-colors"
               />
             </div>
             
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground">Proxy Profile <span className="text-muted-foreground">(Optional)</span></label>
               <select
-                className="w-full bg-muted/30 border border-white/20 rounded-md px-3 py-2.5 text-foreground focus:border-yellow/50 focus:outline-none transition-colors"
+                className="w-full bg-black/40 border border-white/20 rounded-md px-3 py-2.5 text-foreground focus:border-yellow/50 focus:outline-none transition-colors"
                 value={newAccount.proxyProfileId}
                 onChange={e => setNewAccount(n => ({ ...n, proxyProfileId: e.target.value }))}
               >
